@@ -5,8 +5,8 @@
   const BAR_SELECTOR = ".pzp-pc__bottom-buttons-right";
 
   // 네이티브 pzp 아이콘 규격에 맞춤: 36×36 뷰박스, 중앙 ~19px 글리프, 선 1.6px
-  const PIP_SVG = `<svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="8.5" y="11" width="19" height="14" rx="2"/><rect x="18.5" y="18" width="7" height="5" rx="1" fill="currentColor" stroke="none"/></svg>`;
-  const CAPTURE_SVG = `<svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 14.5a2 2 0 0 1 2-2h2.4l1.5-2h5.2l1.5 2h2.4a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2z"/><circle cx="18" cy="18.2" r="3.2"/></svg>`;
+  const PIP_SVG = `<svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="8.5" y="11" width="19" height="14" rx="2"/><rect x="18.5" y="18" width="7" height="5" rx="1" fill="currentColor" stroke="none"/></svg>`;
+  const CAPTURE_SVG = `<svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 14.5a2 2 0 0 1 2-2h2.4l1.5-2h5.2l1.5 2h2.4a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2z"/><circle cx="18" cy="18.2" r="3.2"/></svg>`;
 
   const makeButton = (className, label, svg, onClick) => {
     const button = document.createElement("button");
@@ -187,11 +187,16 @@
         return;
       }
       if (existing) return;
-      bar.prepend(makeButton(className, label, svg, onClick));
+      // 맨 앞의 숨겨진 버튼(폭 0, 마진 6px) 뒤 — 첫 번째 "보이는" 네이티브 버튼 앞에
+      // 넣어야 간격이 균일해진다
+      const firstVisibleNative = [...bar.children].find(
+        (el) => el.offsetWidth > 0 && !el.className.includes("czse")
+      );
+      bar.insertBefore(makeButton(className, label, svg, onClick), firstVisibleNative ?? null);
     };
 
-    // prepend 순서상 나중에 넣은 것이 왼쪽에 온다: [캡처][PIP][기존 버튼들]
-    sync("czse-pip-btn", czse.settings.pipButton, "PIP (화면 속 화면)", PIP_SVG, togglePip);
+    // 삽입 순서: [캡처][PIP][기존 버튼들]
     sync("czse-capture-btn", czse.settings.captureButton, "화면 캡처", CAPTURE_SVG, capture);
+    sync("czse-pip-btn", czse.settings.pipButton, "PIP (화면 속 화면)", PIP_SVG, togglePip);
   }, 1000);
 })();
