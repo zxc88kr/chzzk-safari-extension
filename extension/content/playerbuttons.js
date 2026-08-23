@@ -187,12 +187,15 @@
         return;
       }
       if (existing) return;
-      // 맨 앞의 숨겨진 버튼(폭 0, 마진 6px) 뒤 — 첫 번째 "보이는" 네이티브 버튼 앞에
-      // 넣어야 간격이 균일해진다
-      const firstVisibleNative = [...bar.children].find(
-        (el) => el.offsetWidth > 0 && !el.className.includes("czse")
-      );
-      bar.insertBefore(makeButton(className, label, svg, onClick), firstVisibleNative ?? null);
+      // 클립 버튼(없으면 설정 버튼) 앞에 삽입. offsetWidth 기준은 컨트롤 바가
+      // 숨겨진 동안 전부 0이 돼 맨 끝에 붙는 버그가 있어 이름 기준으로 고정.
+      const anchorEl =
+        bar.querySelector('[class*="custom__clip"]') ??
+        [...bar.children].find((el) =>
+          (el.getAttribute("aria-label") ?? "").includes("설정")
+        ) ??
+        null;
+      bar.insertBefore(makeButton(className, label, svg, onClick), anchorEl);
     };
 
     // 삽입 순서: [캡처][PIP][기존 버튼들]
