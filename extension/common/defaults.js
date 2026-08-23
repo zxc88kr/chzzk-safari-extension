@@ -9,6 +9,7 @@ const CZSE_DEFAULTS = {
   autoWide: true, // 라이브 진입 시 자동 넓은 화면
   autoLumber: true, // 통나무(파워) 자동 획득
   autoUnmute: true, // 라이브 진입 시 자동 음소거 해제
+  adSkip: false, // 광고 스킵 (네트워크 차단 + 건너뛰기 클릭, 실험적)
 
   // 채팅
   chatTimestamp: true, // 채팅 타임스탬프

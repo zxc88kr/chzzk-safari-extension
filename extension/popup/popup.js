@@ -29,11 +29,19 @@ document.addEventListener("DOMContentLoaded", async () => {
     const save = async (key, value, revert) => {
       try {
         await api.storage.local.set({ [key]: value });
+        if (key === "adSkip") await syncAdRuleset(value);
       } catch (err) {
         showError(`저장 실패 (${key}): ${err?.message ?? err}`);
         revert?.();
       }
     };
+
+    // 광고 차단 룰셋(declarativeNetRequest)은 storage 와 별개라 여기서 동기화
+    const syncAdRuleset = (on) =>
+      api.declarativeNetRequest.updateEnabledRulesets(
+        on ? { enableRulesetIds: ["ads"] } : { disableRulesetIds: ["ads"] }
+      );
+    syncAdRuleset(!!settings.adSkip).catch(() => {});
 
     for (const input of document.querySelectorAll("[data-key]")) {
       const key = input.dataset.key;
