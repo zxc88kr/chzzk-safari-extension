@@ -59,6 +59,13 @@ open "app/Chzzk Safari Extension/Chzzk Safari Extension.xcodeproj"
 
 자동 음소거 해제 등 일부 기능은 Safari → 설정 → 웹 사이트 → 자동 재생에서 chzzk.naver.com을 "모든 자동 재생 허용"으로 둬야 제대로 동작한다.
 
-## 참고 / 라이선스
+## Credits
 
-기능 아이디어와 치지직 DOM/API 접근 방식은 [chzzk-plus](https://github.com/kyechan99/chzzk-plus), [cheese-knife](https://github.com/jebibot/cheese-knife)(둘 다 MIT)를 참고했다. 이 저장소도 MIT License.
+Safari로 옮겨오며 아래 두 크롬 확장의 기능과 접근 방식에서 많은 도움을 받았다. 고맙습니다.
+
+- [**chzzk-plus**](https://github.com/kyechan99/chzzk-plus) — kyechan99
+- [**cheese-knife**](https://github.com/jebibot/cheese-knife) — jebibot
+
+## License
+
+MIT © [zxc88kr](https://github.com/zxc88kr)
