@@ -76,11 +76,18 @@
     const url = info.status === "OPEN" ? streamUrl(info) : null;
     if (url) {
       const video = document.createElement("video");
-      video.muted = true;
-      video.autoplay = true;
+      const volume = Math.min(100, Math.max(0, Number(czse.settings.previewVolume) || 0));
+      video.muted = volume === 0;
+      video.volume = volume / 100;
       video.playsInline = true;
       video.src = url;
       card.appendChild(video);
+      // 소리 있는 자동재생이 차단되면 음소거로 폴백
+      // (소리를 내려면 Safari 사이트 설정에서 chzzk 자동 재생 허용 필요)
+      video.play().catch(() => {
+        video.muted = true;
+        video.play().catch(() => {});
+      });
     } else {
       const img = document.createElement("img");
       img.src = (info.liveImageUrl || "").replace("{type}", "480");

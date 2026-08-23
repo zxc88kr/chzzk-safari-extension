@@ -17,6 +17,7 @@ const CZSE_DEFAULTS = {
   hoverPreview: true, // 방송 카드/사이드바 호버 미리보기
   previewDelay: 0.5, // 미리보기 뜨기까지 지연(초)
   previewWidth: 400, // 미리보기 카드 폭(px)
+  previewVolume: 20, // 미리보기 볼륨(%) — 0 이면 음소거
   sidebarRefresh: true, // 사이드바 30초마다 자동 갱신
   autoReload: true, // 오프라인 채널 방송 시작 시 자동 새로고침
 };

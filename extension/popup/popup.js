@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         input.value = settings[key];
         const out = document.querySelector(`output[data-out="${key}"]`);
         const sync = () => {
-          if (out) out.textContent = `${input.value}초`;
+          if (out) out.textContent = `${input.value}${input.dataset.unit ?? ""}`;
         };
         sync();
         input.addEventListener("input", sync);
