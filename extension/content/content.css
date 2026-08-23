@@ -156,16 +156,19 @@ html.czse-hide-offline
 }
 
 .czse-macro-button svg {
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
   display: block;
 }
 
-/* 후원하기 오른쪽 인라인 배치 */
+/* 후원 아이콘 줄 인라인 배치 — 옆 버튼들(28×28, 좌간격 5px)과 동일 실측값 */
 .czse-macro-inline {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  width: 28px;
+  height: 28px;
+  margin-left: 5px;
   vertical-align: middle;
 }
 
