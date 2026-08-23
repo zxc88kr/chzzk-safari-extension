@@ -6,12 +6,23 @@ const CZSE_DEFAULTS = {
   latencyDisplay: true, // 지연시간 칩 표시 (클릭: 1.5배속 따라잡기, Shift+클릭: 라이브 지점 이동)
   arrowSeek: true, // ←/→ 방향키 탐색
   seekStep: 5, // 방향키 이동 간격(초)
+  autoWide: true, // 라이브 진입 시 자동 넓은 화면
+  compressor: false, // 오디오 컴프레서 (음량 평준화)
+  videoBrightness: 1, // 영상 필터: 밝기 (1 = 원본)
+  videoContrast: 1, // 영상 필터: 대비
+  videoSaturation: 1, // 영상 필터: 채도
+  videoGamma: 1, // 영상 필터: 감마
+  videoSharpness: 0, // 영상 필터: 샤프닝 (0 = 끔)
 
   // 채팅
   chatTimestamp: true, // 채팅 타임스탬프
 
   // 화면
   staticLogo: true, // 좌상단 로고 애니메이션을 정적 로고로 교체
+  hideBlocked: false, // 차단한 방송 카드 완전 제거
+  hideRecommended: false, // 사이드바 추천 섹션 숨기기
+  hideOffline: false, // 사이드바 오프라인 채널 숨기기
+  hideRecommendedLive: false, // 홈 상단 추천 라이브 숨기기
 
   // 탐색
   hoverPreview: true, // 방송 카드/사이드바 호버 미리보기

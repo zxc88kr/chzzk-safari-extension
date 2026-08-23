@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Chzzk Safari Extension",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "치지직 시청 편의 기능: 지연시간 표시·따라잡기, 방향키 탐색, 채팅 타임스탬프, 호버 미리보기, 사이드바 자동 갱신, 방송 시작 자동 새로고침",
   "icons": {
     "48": "icons/icon-48.png",
@@ -31,9 +31,12 @@
         "common/defaults.js",
         "content/settings.js",
         "content/util.js",
+        "content/flags.js",
         "content/player.js",
+        "content/videofilter.js",
+        "content/audio.js",
+        "content/widescreen.js",
         "content/chat.js",
-        "content/logo.js",
         "content/preview.js",
         "content/sidebar.js",
         "content/autoreload.js",

@@ -61,6 +61,37 @@ html.czse-static-logo [class*="_logo_chzzk_"] {
   padding-right: 80px;
 }
 
+/* ── 영상 필터 ──────────────────────────────────────────── */
+html.czse-vf .pzp-pc video,
+html.czse-vf video.webplayer-internal-video {
+  filter: url(#czse-video-filter);
+}
+
+/* ── UI 정리 ────────────────────────────────────────────── */
+/* 차단한 방송 카드 완전 제거 (webpack/css-module 클래스 모두 대응) */
+html.czse-hide-blocked li:has([class*="_is_block_"]),
+html.czse-hide-blocked [class*="component_item__"]:has([class*="video_card_is_block__"]) {
+  display: none !important;
+}
+
+/* 홈 상단 추천 라이브 */
+html.czse-hide-rec-live [class*="home_recommend_live_container__"],
+html.czse-hide-rec-live [class*="_recommend_live_"] {
+  display: none !important;
+}
+
+/* 사이드바 추천 섹션 (flags.js 가 텍스트 매칭으로 태깅) */
+html.czse-hide-recommended [data-czse-rec-section="1"] {
+  display: none !important;
+}
+
+/* 사이드바 오프라인 채널 (라이브 표시 없는 프로필 항목) */
+html.czse-hide-offline
+  #sidebar
+  li:has([class*="_type_profile_"]):not(:has([class*="_is_live_"])):not(:has([data-czse-live])) {
+  display: none !important;
+}
+
 /* ── 사이드바 라이브 표시 폴백 ───────────────────────────── */
 /* 네이티브 _is_live_ 해시 클래스를 못 찾았을 때 우리가 그리는 라이브 링 */
 #sidebar [data-czse-live] > [class*="_profile_"]:not([class*="_is_live_"]) img {

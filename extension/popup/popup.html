@@ -32,6 +32,51 @@
       </div>
       <input type="range" data-key="seekStep" data-unit="초" min="1" max="30" step="1" />
     </label>
+    <label class="row">
+      <div class="text">
+        <span class="label">자동 넓은 화면</span>
+        <span class="desc">라이브 진입 시 넓은 화면으로 전환</span>
+      </div>
+      <input type="checkbox" data-key="autoWide" class="switch" />
+    </label>
+    <label class="row">
+      <div class="text">
+        <span class="label">오디오 컴프레서</span>
+        <span class="desc">큰 소리를 눌러 음량 평준화</span>
+      </div>
+      <input type="checkbox" data-key="compressor" class="switch" />
+    </label>
+    <label class="row range-row">
+      <div class="text">
+        <span class="label">밝기 <output data-out="videoBrightness"></output></span>
+      </div>
+      <input type="range" data-key="videoBrightness" min="0.2" max="3" step="0.05" />
+    </label>
+    <label class="row range-row">
+      <div class="text">
+        <span class="label">대비 <output data-out="videoContrast"></output></span>
+      </div>
+      <input type="range" data-key="videoContrast" min="0.2" max="3" step="0.05" />
+    </label>
+    <label class="row range-row">
+      <div class="text">
+        <span class="label">채도 <output data-out="videoSaturation"></output></span>
+      </div>
+      <input type="range" data-key="videoSaturation" min="0" max="3" step="0.05" />
+    </label>
+    <label class="row range-row">
+      <div class="text">
+        <span class="label">감마 <output data-out="videoGamma"></output></span>
+      </div>
+      <input type="range" data-key="videoGamma" min="0.2" max="3" step="0.05" />
+    </label>
+    <label class="row range-row">
+      <div class="text">
+        <span class="label">샤프닝 <output data-out="videoSharpness"></output></span>
+      </div>
+      <input type="range" data-key="videoSharpness" min="0" max="10" step="0.1" />
+    </label>
+    <button type="button" id="filter-reset">영상 필터 초기화</button>
   </section>
 
   <section>
@@ -53,6 +98,32 @@
         <span class="desc">좌상단 로고 애니메이션을 멈춘 워드마크로 교체</span>
       </div>
       <input type="checkbox" data-key="staticLogo" class="switch" />
+    </label>
+    <label class="row">
+      <div class="text">
+        <span class="label">차단 방송 제거</span>
+        <span class="desc">차단한 채널의 방송 카드를 목록에서 제거</span>
+      </div>
+      <input type="checkbox" data-key="hideBlocked" class="switch" />
+    </label>
+    <label class="row">
+      <div class="text">
+        <span class="label">사이드바 추천 숨기기</span>
+      </div>
+      <input type="checkbox" data-key="hideRecommended" class="switch" />
+    </label>
+    <label class="row">
+      <div class="text">
+        <span class="label">오프라인 채널 숨기기</span>
+        <span class="desc">사이드바에서 방송 중이 아닌 채널 숨김</span>
+      </div>
+      <input type="checkbox" data-key="hideOffline" class="switch" />
+    </label>
+    <label class="row">
+      <div class="text">
+        <span class="label">홈 추천 라이브 숨기기</span>
+      </div>
+      <input type="checkbox" data-key="hideRecommendedLive" class="switch" />
     </label>
   </section>
 
