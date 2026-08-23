@@ -29,7 +29,7 @@
     for (const nav of sidebar?.querySelectorAll("nav") ?? []) {
       if (nav.hasAttribute("data-czse-rec-section")) continue;
       const header = nav.querySelector('[class*="header"]')?.textContent ?? "";
-      if (/추천/.test(header)) nav.setAttribute("data-czse-rec-section", "1");
+      if (/추천|파트너/.test(header)) nav.setAttribute("data-czse-rec-section", "1");
     }
   }, 5000);
 })();
