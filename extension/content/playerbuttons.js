@@ -74,7 +74,8 @@
       }
     });
 
-  const log = (...args) => console.info("[CZSE 캡처]", ...args);
+  // 디버깅 시 console.info 로 바꿔 캡처 단계별 로그 확인 가능
+  const log = () => {};
 
   // 마스터 플레이리스트에서 가장 높은 화질의 변형 스트림 URL 을 고른다
   const pickBestVariant = async (masterUrl) => {
