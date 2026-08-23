@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <header>
+    <span class="logo-dot"></span>
+    <h1>Chzzk Safari Extension</h1>
+  </header>
+
+  <section>
+    <h2>플레이어</h2>
+    <label class="row">
+      <div class="text">
+        <span class="label">지연시간 표시</span>
+        <span class="desc">클릭: 1.5배속 따라잡기 · ⇧클릭: 라이브 지점 이동</span>
+      </div>
+      <input type="checkbox" data-key="latencyDisplay" class="switch" />
+    </label>
+    <label class="row">
+      <div class="text">
+        <span class="label">방향키 탐색</span>
+        <span class="desc">←/→ 로 라이브 되감기·따라가기</span>
+      </div>
+      <input type="checkbox" data-key="arrowSeek" class="switch" />
+    </label>
+    <label class="row range-row">
+      <div class="text">
+        <span class="label">이동 간격 <output data-out="seekStep"></output></span>
+      </div>
+      <input type="range" data-key="seekStep" min="1" max="30" step="1" />
+    </label>
+  </section>
+
+  <section>
+    <h2>채팅</h2>
+    <label class="row">
+      <div class="text">
+        <span class="label">타임스탬프</span>
+        <span class="desc">새 채팅에 수신 시각 표시</span>
+      </div>
+      <input type="checkbox" data-key="chatTimestamp" class="switch" />
+    </label>
+  </section>
+
+  <section>
+    <h2>탐색</h2>
+    <label class="row">
+      <div class="text">
+        <span class="label">호버 미리보기</span>
+        <span class="desc">방송 링크 위에서 실시간 미리보기</span>
+      </div>
+      <input type="checkbox" data-key="hoverPreview" class="switch" />
+    </label>
+    <label class="row">
+      <div class="text">
+        <span class="label">사이드바 자동 갱신</span>
+        <span class="desc">30초마다 팔로잉 목록 새로고침</span>
+      </div>
+      <input type="checkbox" data-key="sidebarRefresh" class="switch" />
+    </label>
+    <label class="row">
+      <div class="text">
+        <span class="label">방송 시작 자동 새로고침</span>
+        <span class="desc">오프라인 채널이 방송을 켜면 새로고침</span>
+      </div>
+      <input type="checkbox" data-key="autoReload" class="switch" />
+    </label>
+  </section>
+
+  <script src="../common/defaults.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
