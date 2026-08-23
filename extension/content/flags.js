@@ -7,7 +7,6 @@
     hideBlocked: "czse-hide-blocked",
     hideRecommended: "czse-hide-recommended",
     hideOffline: "czse-hide-offline",
-    hideRecommendedLive: "czse-hide-rec-live",
     hideSidebarCategory: "czse-hide-category",
     hideSidebarSchedule: "czse-hide-schedule",
   };
@@ -43,27 +42,8 @@
     }
   };
 
-  // 홈 추천 라이브: 홈 화면 본문에서 <video> 를 포함하는 상단 블록을 구조로 판별.
-  // video 에서 조상으로 올라가되, 방송 목록까지 포함하는 조상(라이브 링크가 많은
-  // 컨테이너)을 만나면 그 직전에서 멈춘다.
-  const tagHomeRecommend = () => {
-    if (location.pathname !== "/") return;
-    const main = document.querySelector("main") ?? document.body;
-    const video = main.querySelector("video");
-    if (!video || video.closest("[data-czse-home-rec]")) return;
-    let chosen = video;
-    let el = video.parentElement;
-    while (el && el !== main && el !== document.body) {
-      if (el.querySelectorAll('a[href^="/live/"]').length > 12) break;
-      chosen = el;
-      el = el.parentElement;
-    }
-    chosen.setAttribute("data-czse-home-rec", "1");
-  };
-
   setInterval(async () => {
     await czse.ready;
     tagSidebarSections();
-    if (czse.settings.hideRecommendedLive) tagHomeRecommend();
   }, 2000);
 })();

@@ -68,11 +68,6 @@ html.czse-hide-blocked [class*="component_item__"]:has([class*="video_card_is_bl
   display: none !important;
 }
 
-/* 홈 상단 추천 라이브 (flags.js 가 구조 기반으로 태깅) */
-html.czse-hide-rec-live [data-czse-home-rec="1"] {
-  display: none !important;
-}
-
 /* 사이드바 섹션 숨기기 (flags.js 가 헤더 텍스트로 태깅) */
 html.czse-hide-recommended [data-czse-section="rec"],
 html.czse-hide-category [data-czse-section="category"],
