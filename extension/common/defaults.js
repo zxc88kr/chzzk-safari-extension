@@ -12,6 +12,7 @@ const CZSE_DEFAULTS = {
 
   // 채팅
   chatTimestamp: true, // 채팅 타임스탬프
+  chatMacros: true, // 자주 쓰는 문구 버튼
 
   // 화면
   staticLogo: true, // 좌상단 로고 애니메이션을 정적 로고로 교체
