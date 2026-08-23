@@ -19,6 +19,10 @@ const showError = (message) => {
 
 document.addEventListener("DOMContentLoaded", async () => {
   try {
+    // 헤더 우측에 manifest 버전 표시
+    const versionEl = document.getElementById("version");
+    if (versionEl) versionEl.textContent = `v${api.runtime.getManifest().version}`;
+
     if (typeof CZSE_DEFAULTS === "undefined") {
       showError("defaults.js 로드 실패");
       return;
