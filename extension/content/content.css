@@ -68,11 +68,8 @@ html.czse-hide-blocked [class*="component_item__"]:has([class*="video_card_is_bl
   display: none !important;
 }
 
-/* 홈 상단 추천 라이브 (webpack/css-module 클래스 모두 대응) */
-html.czse-hide-rec-live [class*="home_recommend_live_container__"],
-html.czse-hide-rec-live [class*="_recommend_live_"],
-html.czse-hide-rec-live [class*="_recommended_"],
-html.czse-hide-rec-live [class*="_is_player_recommend_"] {
+/* 홈 상단 추천 라이브 (flags.js 가 구조 기반으로 태깅) */
+html.czse-hide-rec-live [data-czse-home-rec="1"] {
   display: none !important;
 }
 
