@@ -35,14 +35,24 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     };
 
+    // 부모 토글이 꺼지면 종속 행(data-parent)을 숨긴다
+    const syncDependents = (parentKey, on) => {
+      document
+        .querySelectorAll(`[data-parent="${parentKey}"]`)
+        .forEach((row) => row.classList.toggle("row-hidden", !on));
+    };
+
     for (const input of document.querySelectorAll("[data-key]")) {
       const key = input.dataset.key;
 
       if (input.type === "checkbox") {
         input.checked = !!settings[key];
+        syncDependents(key, input.checked);
         input.addEventListener("change", () => {
+          syncDependents(key, input.checked);
           save(key, input.checked, () => {
             input.checked = !input.checked;
+            syncDependents(key, input.checked);
           });
         });
       } else if (input.type === "range") {

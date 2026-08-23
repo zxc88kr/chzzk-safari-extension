@@ -137,6 +137,11 @@ h2 {
   gap: 6px;
 }
 
+/* 부모 토글이 꺼지면 숨김 */
+.row-hidden {
+  display: none;
+}
+
 input[type="range"] {
   appearance: none;
   -webkit-appearance: none;

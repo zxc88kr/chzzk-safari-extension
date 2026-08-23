@@ -15,18 +15,18 @@
     <label class="row">
       <div class="text">
         <span class="label">지연시간 표시</span>
-        <span class="desc">클릭: 1.5배속 따라잡기 · ⇧클릭: 라이브 지점 이동</span>
+        <span class="desc">클릭하면 1.5배속 따라잡기, ⇧클릭하면 라이브 지점으로 이동</span>
       </div>
       <input type="checkbox" data-key="latencyDisplay" class="switch" />
     </label>
     <label class="row">
       <div class="text">
         <span class="label">방향키 탐색</span>
-        <span class="desc">←/→ 로 라이브 되감기·따라가기</span>
+        <span class="desc">←/→ 키로 라이브를 되감고 따라가기</span>
       </div>
       <input type="checkbox" data-key="arrowSeek" class="switch" />
     </label>
-    <label class="row range-row">
+    <label class="row range-row" data-parent="arrowSeek">
       <div class="text">
         <span class="label">이동 간격 <output data-out="seekStep"></output></span>
       </div>
@@ -35,9 +35,16 @@
     <label class="row">
       <div class="text">
         <span class="label">자동 넓은 화면</span>
-        <span class="desc">라이브 진입 시 넓은 화면으로 전환</span>
+        <span class="desc">라이브에 들어가면 넓은 화면으로 전환</span>
       </div>
       <input type="checkbox" data-key="autoWide" class="switch" />
+    </label>
+    <label class="row">
+      <div class="text">
+        <span class="label">자동 음소거 해제</span>
+        <span class="desc">라이브에 들어가면 소리 켜기 (Safari 자동 재생 허용 필요)</span>
+      </div>
+      <input type="checkbox" data-key="autoUnmute" class="switch" />
     </label>
     <label class="row">
       <div class="text">
@@ -45,13 +52,6 @@
         <span class="desc">시청 중 쌓이는 통나무를 자동으로 수령</span>
       </div>
       <input type="checkbox" data-key="autoLumber" class="switch" />
-    </label>
-    <label class="row">
-      <div class="text">
-        <span class="label">자동 음소거 해제</span>
-        <span class="desc">라이브 진입 시 소리 켬 (Safari 자동 재생 허용 필요)</span>
-      </div>
-      <input type="checkbox" data-key="autoUnmute" class="switch" />
     </label>
     <label class="row">
       <div class="text">
@@ -63,7 +63,7 @@
     <label class="row">
       <div class="text">
         <span class="label">화면 캡처 버튼</span>
-        <span class="desc">현재 장면을 PNG 로 저장</span>
+        <span class="desc">현재 장면을 이미지로 저장하는 버튼 추가</span>
       </div>
       <input type="checkbox" data-key="captureButton" class="switch" />
     </label>
@@ -74,38 +74,96 @@
     <label class="row">
       <div class="text">
         <span class="label">타임스탬프</span>
-        <span class="desc">새 채팅에 수신 시각 표시</span>
+        <span class="desc">새 채팅에 받은 시각 표시</span>
       </div>
       <input type="checkbox" data-key="chatTimestamp" class="switch" />
     </label>
     <label class="row">
       <div class="text">
         <span class="label">자주 쓰는 문구</span>
-        <span class="desc">채팅창 💬 버튼으로 저장 문구 바로 입력</span>
+        <span class="desc">채팅창 버튼으로 저장한 문구 바로 입력</span>
       </div>
       <input type="checkbox" data-key="chatMacros" class="switch" />
     </label>
   </section>
 
   <section>
-    <h2>화면</h2>
+    <h2>탐색</h2>
+    <label class="row">
+      <div class="text">
+        <span class="label">호버 미리보기</span>
+        <span class="desc">방송 링크에 마우스를 올리면 화면 미리보기</span>
+      </div>
+      <input type="checkbox" data-key="hoverPreview" class="switch" />
+    </label>
+    <label class="row range-row" data-parent="hoverPreview">
+      <div class="text">
+        <span class="label">미리보기 크기 <output data-out="previewWidth"></output></span>
+      </div>
+      <input type="range" data-key="previewWidth" data-unit="px" min="300" max="1000" step="50" />
+    </label>
+    <label class="row range-row" data-parent="hoverPreview">
+      <div class="text">
+        <span class="label">미리보기 지연 <output data-out="previewDelay"></output></span>
+      </div>
+      <input type="range" data-key="previewDelay" data-unit="초" min="0.1" max="3" step="0.1" />
+    </label>
+    <label class="row range-row" data-parent="hoverPreview">
+      <div class="text">
+        <span class="label">미리보기 볼륨 <output data-out="previewVolume"></output></span>
+        <span class="desc">0%면 음소거, 호버 중 우클릭으로 음소거 전환</span>
+      </div>
+      <input type="range" data-key="previewVolume" data-unit="%" min="0" max="100" step="5" />
+    </label>
+    <label class="row">
+      <div class="text">
+        <span class="label">사이드바 자동 갱신</span>
+        <span class="desc">팔로잉 목록을 30초마다 새로고침</span>
+      </div>
+      <input type="checkbox" data-key="sidebarRefresh" class="switch" />
+    </label>
+    <label class="row">
+      <div class="text">
+        <span class="label">방송 시작 자동 새로고침</span>
+        <span class="desc">기다리던 채널이 방송을 켜면 자동으로 열기</span>
+      </div>
+      <input type="checkbox" data-key="autoReload" class="switch" />
+    </label>
+    <label class="row">
+      <div class="text">
+        <span class="label">채널 채팅 탭</span>
+        <span class="desc">오프라인 채널에서도 채팅을 볼 수 있는 탭 추가</span>
+      </div>
+      <input type="checkbox" data-key="channelChatTab" class="switch" />
+    </label>
+  </section>
+
+  <section>
+    <h2>화면 정리</h2>
     <label class="row">
       <div class="text">
         <span class="label">정적 로고</span>
-        <span class="desc">좌상단 로고 애니메이션을 멈춘 워드마크로 교체</span>
+        <span class="desc">좌상단 로고 움직임 끄기</span>
       </div>
       <input type="checkbox" data-key="staticLogo" class="switch" />
     </label>
     <label class="row">
       <div class="text">
-        <span class="label">차단 방송 제거</span>
-        <span class="desc">차단한 채널의 방송 카드를 목록에서 제거</span>
+        <span class="label">차단 방송 숨기기</span>
+        <span class="desc">차단한 채널의 방송 카드를 목록에서 숨김</span>
       </div>
       <input type="checkbox" data-key="hideBlocked" class="switch" />
     </label>
     <label class="row">
       <div class="text">
-        <span class="label">사이드바 추천·파트너 숨기기</span>
+        <span class="label">오프라인 채널 숨기기</span>
+        <span class="desc">사이드바에서 방송 중이 아닌 채널 숨김</span>
+      </div>
+      <input type="checkbox" data-key="hideOffline" class="switch" />
+    </label>
+    <label class="row">
+      <div class="text">
+        <span class="label">추천·파트너 숨기기</span>
       </div>
       <input type="checkbox" data-key="hideRecommended" class="switch" />
     </label>
@@ -123,68 +181,9 @@
     </label>
     <label class="row">
       <div class="text">
-        <span class="label">오프라인 채널 숨기기</span>
-        <span class="desc">사이드바에서 방송 중이 아닌 채널 숨김</span>
-      </div>
-      <input type="checkbox" data-key="hideOffline" class="switch" />
-    </label>
-    <label class="row">
-      <div class="text">
         <span class="label">치즈팜 광고 숨기기</span>
       </div>
       <input type="checkbox" data-key="hidePromo" class="switch" />
-    </label>
-  </section>
-
-  <section>
-    <h2>탐색</h2>
-    <label class="row">
-      <div class="text">
-        <span class="label">호버 미리보기</span>
-        <span class="desc">방송 링크 위에서 실시간 미리보기</span>
-      </div>
-      <input type="checkbox" data-key="hoverPreview" class="switch" />
-    </label>
-    <label class="row range-row">
-      <div class="text">
-        <span class="label">미리보기 크기 <output data-out="previewWidth"></output></span>
-      </div>
-      <input type="range" data-key="previewWidth" data-unit="px" min="300" max="1000" step="50" />
-    </label>
-    <label class="row range-row">
-      <div class="text">
-        <span class="label">미리보기 지연 <output data-out="previewDelay"></output></span>
-        <span class="desc">호버 후 미리보기가 뜨기까지</span>
-      </div>
-      <input type="range" data-key="previewDelay" data-unit="초" min="0.1" max="3" step="0.1" />
-    </label>
-    <label class="row range-row">
-      <div class="text">
-        <span class="label">미리보기 볼륨 <output data-out="previewVolume"></output></span>
-        <span class="desc">0%면 음소거 · 호버 중 우클릭: 음소거 전환</span>
-      </div>
-      <input type="range" data-key="previewVolume" data-unit="%" min="0" max="100" step="5" />
-    </label>
-    <label class="row">
-      <div class="text">
-        <span class="label">사이드바 자동 갱신</span>
-        <span class="desc">30초마다 팔로잉 목록 새로고침</span>
-      </div>
-      <input type="checkbox" data-key="sidebarRefresh" class="switch" />
-    </label>
-    <label class="row">
-      <div class="text">
-        <span class="label">방송 시작 자동 새로고침</span>
-        <span class="desc">오프라인 채널이 방송을 켜면 라이브로 이동/새로고침</span>
-      </div>
-      <input type="checkbox" data-key="autoReload" class="switch" />
-    </label>
-    <label class="row">
-      <div class="text">
-        <span class="label">채널 채팅 탭</span>
-        <span class="desc">채널 홈 탭에 "채팅" 추가 — 오프라인이어도 채팅 진입</span>
-      </div>
-      <input type="checkbox" data-key="channelChatTab" class="switch" />
     </label>
   </section>
 
