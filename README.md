@@ -61,7 +61,7 @@ open "app/Chzzk Safari Extension/Chzzk Safari Extension.xcodeproj"
 
 ## Credits
 
-Safari로 옮겨오며 아래 두 크롬 확장의 기능과 접근 방식에서 많은 도움을 받았다. 고맙습니다.
+Safari로 옮겨오며 아래 두 크롬 확장의 기능과 접근 방식을 참고했다.
 
 - [**chzzk-plus**](https://github.com/kyechan99/chzzk-plus) — kyechan99
 - [**cheese-knife**](https://github.com/jebibot/cheese-knife) — jebibot
