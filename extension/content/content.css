@@ -189,7 +189,6 @@ html.czse-hide-offline
   font-weight: 400;
   line-height: 27px;
   letter-spacing: normal;
-  -webkit-font-smoothing: antialiased;
   white-space: nowrap;
   opacity: 0;
   pointer-events: none;
