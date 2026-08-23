@@ -74,6 +74,29 @@
       }
     });
 
+  const log = (...args) => console.info("[CZSE 캡처]", ...args);
+
+  // 마스터 플레이리스트에서 가장 높은 화질의 변형 스트림 URL 을 고른다
+  const pickBestVariant = async (masterUrl) => {
+    try {
+      const text = await fetch(masterUrl).then((r) => r.text());
+      const lines = text.split("\n");
+      let best = null;
+      for (let i = 0; i < lines.length - 1; i++) {
+        const m = lines[i].match(/^#EXT-X-STREAM-INF:.*BANDWIDTH=(\d+)/);
+        if (!m) continue;
+        const bandwidth = Number(m[1]);
+        const uri = lines[i + 1]?.trim();
+        if (!uri || uri.startsWith("#")) continue;
+        if (!best || bandwidth > best.bandwidth) best = { bandwidth, uri };
+      }
+      if (best) return new URL(best.uri, masterUrl).href;
+    } catch (err) {
+      log("변형 선택 실패, 마스터 사용:", err?.message);
+    }
+    return masterUrl;
+  };
+
   // 본 플레이어 캔버스가 오염된 경우: 스트림을 CORS 모드로 따로 열어 프레임 추출
   const captureViaCorsStream = async () => {
     const channelId = czse.util.channelIdFromPath();
@@ -82,18 +105,23 @@
       `/service/v3.3/channels/${channelId}/live-detail`,
       `/service/v2/channels/${channelId}/live-detail`,
     ]);
+    log("live-detail:", info ? "OK" : "실패");
     let media = null;
     try {
       media = JSON.parse(info.livePlaybackJson).media;
     } catch {
+      log("livePlaybackJson 파싱 실패");
       return false;
     }
-    const url = (
+    let url = (
       media?.find((m) => m.mediaId === "HLS") ??
       media?.find((m) => m.mediaId === "LLHLS") ??
       media?.[0]
     )?.path;
+    log("스트림 URL:", url ? url.slice(0, 60) : "없음");
     if (!url) return false;
+    url = await pickBestVariant(url);
+    log("선택된 변형:", url.slice(0, 60));
 
     const video = document.createElement("video");
     video.crossOrigin = "anonymous";
@@ -115,10 +143,14 @@
         }, { once: true });
         video.play().catch(() => {});
       });
+      log("CORS 영상 로드:", `${video.videoWidth}x${video.videoHeight}`);
       if (!video.videoWidth) return false;
-      downloadBlob(await frameToBlob(video));
+      const blob = await frameToBlob(video);
+      log("프레임 추출 OK:", blob.size, "bytes — 다운로드 시도");
+      downloadBlob(blob);
       return true;
-    } catch {
+    } catch (err) {
+      log("CORS 캡처 실패:", err?.name ?? err);
       return false;
     } finally {
       video.src = "";
