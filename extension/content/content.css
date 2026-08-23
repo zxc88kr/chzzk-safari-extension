@@ -49,6 +49,11 @@ html.czse-ts-off .czse-ts {
   display: none;
 }
 
+/* 채팅 필터링 안내 문구 숨김 (chat.js 가 텍스트 매칭으로 태깅) */
+[data-czse-hidden-notice] {
+  display: none !important;
+}
+
 /* ── 정적 로고 ──────────────────────────────────────────── */
 /* 애니메이션 로고를 CHZZK 워드마크(mask)로 교체. cheese-knife 의 static-logo 방식.
    구 webpack(navigation_bar_logo_chzzk__)과 현 css-module(_logo_chzzk_해시) 클래스 모두 매칭 */

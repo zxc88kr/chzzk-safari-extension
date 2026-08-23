@@ -25,12 +25,21 @@
   const isChatItem = (el) =>
     el.matches(ITEM_SELECTOR) || el.parentElement?.getAttribute("role") === "log";
 
+  // "쾌적한 시청 환경을 위해 일부 메시지는 필터링 됩니다..." 안내 문구는 항상 숨긴다
+  const NOTICE_PATTERN = /일부 메시지는 필터링/;
+  const hideIfNotice = (item) => {
+    if (NOTICE_PATTERN.test(item.textContent ?? "")) {
+      item.setAttribute("data-czse-hidden-notice", "");
+    }
+  };
+
   const observer = new MutationObserver((mutations) => {
-    if (!czse.settings?.chatTimestamp) return;
     for (const m of mutations) {
       if (!m.target.closest?.(CHAT_SCOPE)) continue;
       for (const node of m.addedNodes) {
-        if (node instanceof Element && isChatItem(node)) stamp(node);
+        if (!(node instanceof Element) || !isChatItem(node)) continue;
+        hideIfNotice(node);
+        if (czse.settings?.chatTimestamp) stamp(node);
       }
     }
   });
