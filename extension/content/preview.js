@@ -140,6 +140,19 @@
     if (e.target === hoverAnchor || hoverAnchor.contains(e.target)) removeCard();
   });
 
+  // 호버 중 우클릭: 미리보기 음소거 전환 (카드는 pointer-events: none 이라 링크에서 받는다)
+  document.addEventListener("contextmenu", (e) => {
+    const video = card?.querySelector("video");
+    if (!video || !hoverAnchor) return;
+    if (e.target !== hoverAnchor && !hoverAnchor.contains(e.target)) return;
+    e.preventDefault();
+    video.muted = !video.muted;
+    if (!video.muted) {
+      if (video.volume === 0) video.volume = 0.2;
+      video.play().catch(() => {});
+    }
+  });
+
   document.addEventListener("click", removeCard, true);
   window.addEventListener("scroll", removeCard, { capture: true, passive: true });
 })();

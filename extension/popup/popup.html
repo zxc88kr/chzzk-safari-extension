@@ -67,8 +67,21 @@
     </label>
     <label class="row range-row">
       <div class="text">
+        <span class="label">미리보기 크기 <output data-out="previewWidth"></output></span>
+      </div>
+      <input type="range" data-key="previewWidth" data-unit="px" min="300" max="1000" step="50" />
+    </label>
+    <label class="row range-row">
+      <div class="text">
+        <span class="label">미리보기 지연 <output data-out="previewDelay"></output></span>
+        <span class="desc">호버 후 미리보기가 뜨기까지</span>
+      </div>
+      <input type="range" data-key="previewDelay" data-unit="초" min="0.1" max="3" step="0.1" />
+    </label>
+    <label class="row range-row">
+      <div class="text">
         <span class="label">미리보기 볼륨 <output data-out="previewVolume"></output></span>
-        <span class="desc">0%면 음소거. 소리를 내려면 Safari 사이트 설정에서 chzzk 자동 재생 허용 필요</span>
+        <span class="desc">0%면 음소거 · 호버 중 우클릭: 음소거 전환</span>
       </div>
       <input type="range" data-key="previewVolume" data-unit="%" min="0" max="100" step="5" />
     </label>
