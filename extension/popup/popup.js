@@ -56,23 +56,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         input.addEventListener("change", () => save(key, Number(input.value)));
       }
     }
-    // 영상 필터 초기화
-    document.getElementById("filter-reset")?.addEventListener("click", () => {
-      const reset = {
-        videoBrightness: 1,
-        videoContrast: 1,
-        videoSaturation: 1,
-        videoGamma: 1,
-        videoSharpness: 0,
-      };
-      api.storage.local.set(reset).catch((err) => showError(`초기화 실패: ${err?.message ?? err}`));
-      for (const [key, value] of Object.entries(reset)) {
-        const input = document.querySelector(`[data-key="${key}"]`);
-        if (!input) continue;
-        input.value = value;
-        input.dispatchEvent(new Event("input"));
-      }
-    });
   } catch (err) {
     showError(`초기화 실패: ${err?.message ?? err}`);
   }

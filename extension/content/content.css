@@ -61,12 +61,6 @@ html.czse-static-logo [class*="_logo_chzzk_"] {
   padding-right: 80px;
 }
 
-/* ── 영상 필터 ──────────────────────────────────────────── */
-html.czse-vf .pzp-pc video,
-html.czse-vf video.webplayer-internal-video {
-  filter: url(#czse-video-filter);
-}
-
 /* ── UI 정리 ────────────────────────────────────────────── */
 /* 차단한 방송 카드 완전 제거 (webpack/css-module 클래스 모두 대응) */
 html.czse-hide-blocked li:has([class*="_is_block_"]),

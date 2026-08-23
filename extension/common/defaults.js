@@ -7,12 +7,6 @@ const CZSE_DEFAULTS = {
   arrowSeek: true, // ←/→ 방향키 탐색
   seekStep: 5, // 방향키 이동 간격(초)
   autoWide: true, // 라이브 진입 시 자동 넓은 화면
-  compressor: false, // 오디오 컴프레서 (음량 평준화)
-  videoBrightness: 1, // 영상 필터: 밝기 (1 = 원본)
-  videoContrast: 1, // 영상 필터: 대비
-  videoSaturation: 1, // 영상 필터: 채도
-  videoGamma: 1, // 영상 필터: 감마
-  videoSharpness: 0, // 영상 필터: 샤프닝 (0 = 끔)
 
   // 채팅
   chatTimestamp: true, // 채팅 타임스탬프
