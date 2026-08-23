@@ -163,6 +163,7 @@ html.czse-hide-offline
 
 /* 후원 아이콘 줄 인라인 배치 — 옆 버튼들(28×28, 좌간격 5px)과 동일 실측값 */
 .czse-macro-inline {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -170,6 +171,30 @@ html.czse-hide-offline
   height: 28px;
   margin-left: 5px;
   vertical-align: middle;
+}
+
+/* 치지직풍 호버 툴팁 (자체 툴팁 컴포넌트는 우리 버튼에 안 붙으므로 CSS 로 재현) */
+.czse-macro-inline::after {
+  content: attr(aria-label);
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 5px 9px;
+  border-radius: 6px;
+  background: #3b3d44;
+  color: #fff;
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+  z-index: 100;
+}
+
+.czse-macro-inline:hover::after {
+  opacity: 1;
+  transition-delay: 0.35s;
 }
 
 /* 앵커를 못 찾았을 때 채팅 우하단 플로팅 폴백 */

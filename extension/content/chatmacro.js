@@ -193,11 +193,10 @@
       null;
     button = document.createElement("button");
     button.type = "button";
-    button.title = "자주 쓰는 문구";
-    button.setAttribute("aria-label", "자주 쓰는 문구");
+    button.setAttribute("aria-label", "자주 쓰는 문구"); // CSS 툴팁 겸용 (title 은 이중 툴팁이라 제외)
     // 치지직 아이콘들과 어울리는 모노크롬 말풍선 라인 아이콘
     button.innerHTML =
-      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 20l1.9-4.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/><path d="M8.5 10.5h7M8.5 13.5h4.5"/></svg>';
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 20l1.9-4.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/><path d="M8.5 10.5h7M8.5 13.5h4.5"/></svg>';
     button.addEventListener("mousedown", (e) => e.preventDefault());
     button.addEventListener("click", () => (panel ? closePanel() : openPanel()));
     if (donationArea) {
