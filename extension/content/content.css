@@ -173,9 +173,9 @@ html.czse-hide-offline
   vertical-align: middle;
 }
 
-/* 폴백 툴팁 — 네이티브 _label_ 복제가 실패했을 때만. 실측값(12px/400, 0 9px,
-   높이 27, 라운드 6, rgb(46,48,51)) 재현 */
-.czse-macro-inline:not(.czse-native-label)::after {
+/* 툴팁 — 네이티브(_label_, 호버 시에만 React 렌더) 실측값 재현:
+   12px/400, 패딩 0 9px, 높이 27, 라운드 6, rgb(46,48,51) */
+.czse-macro-inline::after {
   content: attr(aria-label);
   position: absolute;
   bottom: calc(100% + 6px);
@@ -196,7 +196,7 @@ html.czse-hide-offline
   z-index: 100;
 }
 
-.czse-macro-inline:not(.czse-native-label):hover::after {
+.czse-macro-inline:hover::after {
   opacity: 1;
 }
 
