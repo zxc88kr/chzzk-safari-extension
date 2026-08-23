@@ -13,29 +13,9 @@
   const getLiveDetail = async (channelId) => {
     const hit = cache.get(channelId);
     if (hit && Date.now() - hit.at < CACHE_TTL) return hit.info;
-    const info = await czse.util.fetchApi([
-      `/service/v3.3/channels/${channelId}/live-detail`,
-      `/service/v2/channels/${channelId}/live-detail`,
-    ]);
-    if (info) {
-      try {
-        info.livePlayback = JSON.parse(info.livePlaybackJson);
-      } catch {
-        /* 성인 방송 등 재생 정보 없음 */
-      }
-    }
+    const info = await czse.util.liveDetail(channelId);
     cache.set(channelId, { info, at: Date.now() });
     return info;
-  };
-
-  const streamUrl = (info) => {
-    const media = info?.livePlayback?.media;
-    if (!Array.isArray(media)) return null;
-    const pick =
-      media.find((m) => m.mediaId === "HLS") ||
-      media.find((m) => m.mediaId === "LLHLS") ||
-      media[0];
-    return pick?.path || null;
   };
 
   const removeCard = () => {
@@ -54,7 +34,7 @@
 
     let left;
     let top;
-    if (rect.width < 240) {
+    if (anchor.closest("#sidebar")) {
       // 사이드바 아이템: 오른쪽에 붙인다
       left = rect.right + 10;
       top = rect.top + rect.height / 2 - height / 2;
@@ -73,7 +53,10 @@
     card = document.createElement("div");
     card.className = "czse-preview";
 
-    const url = info.status === "OPEN" ? streamUrl(info) : null;
+    const url =
+      info.status === "OPEN"
+        ? czse.util.pickStreamPath(info.livePlayback?.media)
+        : null;
     if (url) {
       const video = document.createElement("video");
       const volume = Math.min(100, Math.max(0, Number(czse.settings.previewVolume) || 0));
@@ -118,13 +101,13 @@
   };
 
   document.addEventListener("mouseover", (e) => {
-    if (!czse.settings?.hoverPreview) return;
+    if (!czse.settings.hoverPreview) return;
     const anchor = e.target.closest?.('a[href^="/live/"]');
     if (!anchor || anchor === hoverAnchor) return;
     removeCard();
     hoverAnchor = anchor;
     timer = setTimeout(async () => {
-      const channelId = czse.util.channelIdFromPath(new URL(anchor.href).pathname);
+      const channelId = czse.util.channelIdFromHref(anchor);
       if (!channelId) return;
       if (channelId === czse.util.channelIdFromPath()) return; // 지금 보는 방송은 제외
       const info = await getLiveDetail(channelId);

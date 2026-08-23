@@ -49,7 +49,7 @@ html.czse-ts-off .czse-ts {
   display: none;
 }
 
-/* 채팅 필터링 안내 문구 숨김 (chat.js 가 텍스트 매칭으로 태깅) */
+/* 시스템 공지 숨김 (chat.js 가 닉네임 부재 구조로 태깅) */
 [data-czse-hidden-notice] {
   display: none !important;
 }
@@ -200,18 +200,6 @@ html.czse-hide-offline
 
 .czse-macro-inline:hover::after {
   opacity: 1;
-}
-
-/* 앵커를 못 찾았을 때 채팅 우하단 플로팅 폴백 */
-.czse-macro-floating {
-  position: absolute;
-  right: 10px;
-  bottom: 96px;
-  z-index: 50;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: rgba(20, 21, 23, 0.75);
 }
 
 .czse-macro-toast {

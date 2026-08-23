@@ -34,10 +34,9 @@
     { type: "schedule", pattern: /일정/ },
   ];
   const tagSidebarSections = () => {
-    const sidebar = document.getElementById("sidebar");
-    for (const nav of sidebar?.querySelectorAll("nav") ?? []) {
+    for (const nav of czse.util.sidebarNavs()) {
       if (nav.hasAttribute("data-czse-section")) continue;
-      const header = nav.querySelector('[class*="header"]')?.textContent ?? "";
+      const header = czse.util.navHeaderText(nav);
       const match = SECTION_TYPES.find(({ pattern }) => pattern.test(header));
       if (match) nav.setAttribute("data-czse-section", match.type);
     }
@@ -62,8 +61,7 @@
     }
   };
 
-  setInterval(async () => {
-    await czse.ready;
+  czse.util.poll(() => {
     tagSidebarSections();
     if (czse.settings.hidePromo) tagPromoBanners();
   }, 2000);

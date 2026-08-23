@@ -8,7 +8,6 @@
   let chip = null;
   let catchingUp = false;
 
-  const isLivePage = () => location.pathname.startsWith("/live/");
   const playerContainer = (video) =>
     video.closest(".pzp-pc, .pzp, #live_player_layout") || video.parentElement;
 
@@ -49,10 +48,11 @@
     parent.appendChild(chip);
   };
 
-  setInterval(async () => {
-    await czse.ready;
+  czse.util.poll(() => {
     const video =
-      isLivePage() && czse.settings.latencyDisplay ? czse.util.findVideo() : null;
+      czse.util.isLivePage() && czse.settings.latencyDisplay
+        ? czse.util.findVideo()
+        : null;
     if (!video) {
       chip?.remove();
       chip = null;
@@ -68,11 +68,12 @@
     }
   }, 1000);
 
+
   // 방향키 탐색 (라이브 전용 — VOD 는 기본 플레이어가 이미 지원)
   document.addEventListener(
     "keydown",
     (e) => {
-      if (!czse.settings?.arrowSeek || !isLivePage()) return;
+      if (!czse.settings.arrowSeek || !czse.util.isLivePage()) return;
       if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
       if (e.metaKey || e.ctrlKey || e.altKey || e.shiftKey) return;
       if (czse.util.isTyping(e.target)) return;
@@ -87,7 +88,7 @@
         try {
           if (video.buffered.length) start = video.buffered.start(0);
         } catch {
-          /* ignore */
+          /* buffered 접근 실패 무시 */
         }
         video.currentTime = Math.max(start + 0.5, video.currentTime - step);
         stopCatchUp(video);

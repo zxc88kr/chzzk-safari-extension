@@ -42,7 +42,7 @@
       for (const node of m.addedNodes) {
         if (!(node instanceof Element) || !isChatItem(node)) continue;
         hideIfNotice(node);
-        if (czse.settings?.chatTimestamp) stamp(node);
+        if (czse.settings.chatTimestamp) stamp(node);
       }
     }
   });

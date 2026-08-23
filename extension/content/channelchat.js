@@ -34,8 +34,7 @@
     return true;
   };
 
-  setInterval(async () => {
-    await czse.ready;
+  czse.util.poll(() => {
     const existing = document.querySelector(`.${CLASS}`);
     const channelId = czse.settings.channelChatTab ? channelIdFromChannelPage() : null;
     if (!channelId) {

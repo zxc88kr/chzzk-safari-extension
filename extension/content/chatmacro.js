@@ -171,10 +171,9 @@
     closePanel();
   });
 
-  setInterval(async () => {
-    await czse.ready;
+  czse.util.poll(async () => {
     if (messages === null) await load();
-    const aside = document.getElementById("aside-chatting");
+    const aside = czse.util.chatAside();
     const existing = [...document.querySelectorAll(".czse-macro-button")];
     if (!czse.settings.chatMacros || !aside) {
       existing.forEach((el) => el.remove());

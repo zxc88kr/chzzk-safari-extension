@@ -103,23 +103,9 @@
   const captureViaCorsStream = async () => {
     const channelId = czse.util.channelIdFromPath();
     if (!channelId) return false;
-    const info = await czse.util.fetchApi([
-      `/service/v3.3/channels/${channelId}/live-detail`,
-      `/service/v2/channels/${channelId}/live-detail`,
-    ]);
+    const info = await czse.util.liveDetail(channelId);
     log("live-detail:", info ? "OK" : "실패");
-    let media = null;
-    try {
-      media = JSON.parse(info.livePlaybackJson).media;
-    } catch {
-      log("livePlaybackJson 파싱 실패");
-      return false;
-    }
-    let url = (
-      media?.find((m) => m.mediaId === "HLS") ??
-      media?.find((m) => m.mediaId === "LLHLS") ??
-      media?.[0]
-    )?.path;
+    let url = czse.util.pickStreamPath(info?.livePlayback?.media);
     log("스트림 URL:", url ? url.slice(0, 60) : "없음");
     if (!url) return false;
     url = await pickBestVariant(url);
@@ -175,8 +161,7 @@
     }
   };
 
-  setInterval(async () => {
-    await czse.ready;
+  czse.util.poll(() => {
     const bar = document.querySelector(BAR_SELECTOR);
     if (!bar) return;
 

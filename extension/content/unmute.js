@@ -7,10 +7,9 @@
 (() => {
   let appliedPath = null;
 
-  setInterval(async () => {
-    await czse.ready;
+  czse.util.poll(() => {
     if (!czse.settings.autoUnmute) return;
-    if (!location.pathname.startsWith("/live/")) {
+    if (!czse.util.isLivePage()) {
       appliedPath = null;
       return;
     }

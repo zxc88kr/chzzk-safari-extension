@@ -10,16 +10,11 @@
 (() => {
   const REFRESH_INTERVAL = 30 * 1000;
 
-  const channelIdOf = (a) =>
-    a.getAttribute("href")?.match(/^\/live\/([^/?#]+)/)?.[1] ?? null;
-
   // 팔로잉 섹션만 갱신 대상 (추천/파트너 섹션의 /live/ 링크를 건드리지 않도록)
-  const findFollowingSection = (sidebar) => {
-    const navs = [...sidebar.querySelectorAll("nav")];
+  const findFollowingSection = () => {
+    const navs = czse.util.sidebarNavs();
     return (
-      navs.find((nav) =>
-        /팔로잉|팔로우/.test(nav.querySelector('[class*="header"]')?.textContent ?? "")
-      ) ?? navs[0]
+      navs.find((nav) => /팔로잉|팔로우/.test(czse.util.navHeaderText(nav))) ?? navs[0]
     );
   };
 
@@ -35,10 +30,8 @@
       .join(" · ");
 
   const tick = async () => {
-    await czse.ready;
     if (!czse.settings.sidebarRefresh) return;
-    const sidebar = document.getElementById("sidebar");
-    if (!sidebar) return;
+    if (!document.getElementById("sidebar")) return;
 
     const content = await czse.util.fetchApi([
       "/service/v1/channels/followings/live?page=0&size=50",
@@ -58,13 +51,13 @@
       ])
     );
 
-    const section = findFollowingSection(sidebar);
+    const section = findFollowingSection();
     if (!section) return;
     const nativeLiveClass = findNativeLiveClass(section);
 
     const seen = new Set();
     for (const a of section.querySelectorAll('a[href^="/live/"]')) {
-      const id = channelIdOf(a);
+      const id = czse.util.channelIdFromHref(a);
       if (!id) continue;
       seen.add(id);
       const container = a.parentElement;
@@ -115,5 +108,5 @@
     }
   };
 
-  setInterval(tick, REFRESH_INTERVAL);
+  czse.util.poll(tick, REFRESH_INTERVAL);
 })();

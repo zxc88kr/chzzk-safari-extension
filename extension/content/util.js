@@ -1,19 +1,22 @@
 "use strict";
 
+// czse.util — 공용 헬퍼: findVideo, latency, channelIdFromPath, fetchApi, liveDetail 등
 czse.util = {
-  // 채팅 입력창 등 타이핑 중인 요소인지 (단축키 무시용)
   isTyping(el) {
     return !!el?.closest?.(
       'input, textarea, [contenteditable="true"], [contenteditable=""], pre[contenteditable]'
     );
   },
 
-  // 플레이어 비디오 요소
+  // 본 플레이어 비디오 요소 (미리보기·캡처용으로 만드는 다른 video 는 제외)
   findVideo() {
     return document.querySelector(
       "video.webplayer-internal-video, .pzp-pc video, #live_player_layout video"
     );
   },
+
+  // 라이브 페이지 여부. '/live/'(빈 id) 경로도 true 로 본다.
+  isLivePage: () => location.pathname.startsWith("/live/"),
 
   // 라이브 엣지(시청 가능한 가장 최신 지점)
   liveEdge(video) {
@@ -40,6 +43,33 @@ czse.util = {
     return m ? m[1] : null;
   },
 
+  // /live/ 앵커 요소의 href 에서 채널 ID 추출
+  channelIdFromHref(el) {
+    return czse.util.channelIdFromPath(new URL(el.href, location.href).pathname);
+  },
+
+  // 채팅 사이드바 루트
+  chatAside: () => document.getElementById("aside-chatting"),
+
+  // 사이드바 nav 목록 (없으면 빈 배열)
+  sidebarNavs() {
+    const sidebar = document.getElementById("sidebar");
+    return sidebar ? [...sidebar.querySelectorAll("nav")] : [];
+  },
+
+  // 사이드바 섹션 nav 의 헤더 텍스트
+  navHeaderText(nav) {
+    return nav.querySelector('[class*="header"]')?.textContent ?? "";
+  },
+
+  // 설정 로드를 기다린 뒤 주기적으로 fn 을 호출하는 폴러
+  poll(fn, ms) {
+    setInterval(async () => {
+      await czse.ready;
+      fn(czse.settings);
+    }, ms);
+  },
+
   // 치지직 API 호출. 버전 개편에 대비해 후보 경로를 순서대로 시도한다.
   async fetchApi(paths) {
     for (const path of paths) {
@@ -55,6 +85,32 @@ czse.util = {
       }
     }
     return null;
+  },
+
+  // 라이브 상세 정보. livePlaybackJson 을 파싱해 info.livePlayback 에 부착한다.
+  async liveDetail(channelId) {
+    const info = await czse.util.fetchApi([
+      `/service/v3.3/channels/${channelId}/live-detail`,
+      `/service/v2/channels/${channelId}/live-detail`,
+    ]);
+    if (info) {
+      try {
+        info.livePlayback = JSON.parse(info.livePlaybackJson);
+      } catch {
+        /* 성인 방송 등 재생 정보 없음 */
+      }
+    }
+    return info;
+  },
+
+  // livePlayback.media 에서 재생 스트림 path 선택 (HLS → LLHLS → 첫 요소)
+  pickStreamPath(media) {
+    if (!Array.isArray(media)) return null;
+    const pick =
+      media.find((m) => m.mediaId === "HLS") ??
+      media.find((m) => m.mediaId === "LLHLS") ??
+      media[0];
+    return pick?.path || null;
   },
 
   pad2: (n) => String(n).padStart(2, "0"),

@@ -15,8 +15,7 @@
   let watchedId = null;
   let lastStatus = null;
 
-  setInterval(async () => {
-    await czse.ready;
+  czse.util.poll(async () => {
     if (!czse.settings.autoReload) return;
 
     const channelId = watchTarget();

@@ -9,6 +9,7 @@
 
   let collecting = false;
 
+  // setTimeout 진입 1회 호출도 이 함수를 쓰므로 ready 대기를 함수 안에 둔다
   const collectViaApi = async () => {
     await czse.ready;
     if (!czse.settings.autoLumber || collecting) return;
@@ -39,7 +40,7 @@
     await czse.ready;
     if (!czse.settings.autoLumber) return;
     if (!czse.util.channelIdFromPath()) return;
-    const aside = document.getElementById("aside-chatting");
+    const aside = czse.util.chatAside();
     if (!aside) return;
 
     const button = [...aside.querySelectorAll("button")].find((btn) => {
