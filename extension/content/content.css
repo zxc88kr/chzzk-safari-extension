@@ -61,6 +61,14 @@ html.czse-static-logo [class*="_logo_chzzk_"] {
   padding-right: 80px;
 }
 
+/* ── 사이드바 라이브 표시 폴백 ───────────────────────────── */
+/* 네이티브 _is_live_ 해시 클래스를 못 찾았을 때 우리가 그리는 라이브 링 */
+#sidebar [data-czse-live] > [class*="_profile_"]:not([class*="_is_live_"]) img {
+  outline: 2px solid #00ffa3;
+  outline-offset: 1px;
+  border-radius: 50%;
+}
+
 /* ── 호버 미리보기 카드 ──────────────────────────────────── */
 .czse-preview {
   position: fixed;
