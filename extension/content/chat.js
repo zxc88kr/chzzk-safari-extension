@@ -25,12 +25,15 @@
   const isChatItem = (el) =>
     el.matches(ITEM_SELECTOR) || el.parentElement?.getAttribute("role") === "log";
 
-  // "쾌적한 시청 환경을 위해 일부 메시지는 필터링 됩니다..." 안내 문구는 항상 숨긴다
-  const NOTICE_PATTERN = /일부 메시지는 필터링/;
+  // 시스템 공지(환영/필터링 안내 등) 숨김: 채팅 로그 안에서 닉네임 요소가 없는
+  // 아이템은 유저 채팅이 아니므로 전부 숨긴다. 문구에 의존하지 않는 구조 기반 판별.
+  // (닉네임을 포함하는 컨테이너는 querySelector 에 걸리므로 잘못 숨겨질 일이 없다)
+  const NICKNAME_SELECTOR =
+    '[class*="live_chatting_message_nickname__"], [class*="_nickname_"]';
   const hideIfNotice = (item) => {
-    if (NOTICE_PATTERN.test(item.textContent ?? "")) {
-      item.setAttribute("data-czse-hidden-notice", "");
-    }
+    if (!item.closest('[role="log"], [class*="live_chatting_list_wrapper"]')) return;
+    if (item.querySelector(NICKNAME_SELECTOR)) return;
+    item.setAttribute("data-czse-hidden-notice", "");
   };
 
   const observer = new MutationObserver((mutations) => {
