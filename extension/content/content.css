@@ -173,18 +173,21 @@ html.czse-hide-offline
   vertical-align: middle;
 }
 
-/* 치지직풍 호버 툴팁 (자체 툴팁 컴포넌트는 우리 버튼에 안 붙으므로 CSS 로 재현) */
+/* 치지직 네이티브 툴팁(pzp-button__tooltip) 실측값 재현:
+   13px/400, 패딩 6px 12px, 라운드 14px, 배경 rgba(0,0,0,0.6) */
 .czse-macro-inline::after {
   content: attr(aria-label);
   position: absolute;
   bottom: calc(100% + 8px);
   left: 50%;
   transform: translateX(-50%);
-  padding: 5px 9px;
-  border-radius: 6px;
-  background: #3b3d44;
+  padding: 6px 12px;
+  border-radius: 14px;
+  background: rgba(0, 0, 0, 0.6);
   color: #fff;
-  font-size: 12px;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 16px;
   white-space: nowrap;
   opacity: 0;
   pointer-events: none;
