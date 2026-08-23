@@ -9,7 +9,6 @@ const CZSE_DEFAULTS = {
   autoWide: true, // 라이브 진입 시 자동 넓은 화면
   autoLumber: true, // 통나무(파워) 자동 획득
   autoUnmute: true, // 라이브 진입 시 자동 음소거 해제
-  uaSpoof: false, // UA 위장 (클립 차단 우회 실험 — 변경 시 새로고침 필요, 재생 깨질 수 있음)
   pipButton: true, // 플레이어에 PIP 버튼 추가
   captureButton: true, // 플레이어에 화면 캡처 버튼 추가
 
