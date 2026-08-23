@@ -3,6 +3,12 @@
 </p>
 <h1 align="center">Chzzk Safari Extension</h1>
 <p align="center">치지직 시청 편의 기능을 담은 개인용 Safari 확장</p>
+<p align="center">
+  <img src="https://img.shields.io/badge/Safari-Web%20Extension-1B88CA?style=flat-square&logo=safari&logoColor=white" alt="Safari Web Extension" />
+  <img src="https://img.shields.io/badge/macOS-000000?style=flat-square&logo=apple&logoColor=white" alt="macOS" />
+  <img src="https://img.shields.io/badge/Manifest-v3-4C8BF5?style=flat-square" alt="Manifest v3" />
+  <img src="https://img.shields.io/github/license/zxc88kr/chzzk-safari-extension?style=flat-square&color=00FFA3" alt="License" />
+</p>
 
 크롬용 확장은 많지만 Safari에서는 쓸 수 없어서, 자주 쓰던 기능만 골라 Safari Web Extension으로 다시 만들었습니다. 모든 기능은 확장 팝업에서 하나씩 켜고 끌 수 있습니다.
 
