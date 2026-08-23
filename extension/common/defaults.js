@@ -18,6 +18,7 @@ const CZSE_DEFAULTS = {
   hideSidebarCategory: false, // 사이드바 인기 카테고리 숨기기
   hideSidebarSchedule: false, // 사이드바 방송 일정 숨기기
   hideOffline: false, // 사이드바 오프라인 채널 숨기기
+  hidePromo: false, // 치즈팜 등 프로모션 배너 숨기기
 
   // 탐색
   hoverPreview: true, // 방송 카드/사이드바 호버 미리보기

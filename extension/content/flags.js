@@ -9,6 +9,7 @@
     hideOffline: "czse-hide-offline",
     hideSidebarCategory: "czse-hide-category",
     hideSidebarSchedule: "czse-hide-schedule",
+    hidePromo: "czse-hide-promo",
   };
 
   const apply = () => {
@@ -42,8 +43,28 @@
     }
   };
 
+  // 프로모션 배너(치즈팜 등): 이미지 alt / aria-label / 짧은 링크 텍스트로 판별.
+  // 배너의 클래스명이 아니라 내용으로 찾으므로 리빌드에 강하다.
+  const PROMO_PATTERN = /치즈팜/;
+  const tagPromoBanners = () => {
+    for (const el of document.querySelectorAll("img[alt], [aria-label]")) {
+      const text = el.getAttribute("alt") ?? el.getAttribute("aria-label") ?? "";
+      if (!PROMO_PATTERN.test(text)) continue;
+      (el.closest("nav, li, aside") ?? el.closest("a, div") ?? el).setAttribute(
+        "data-czse-promo",
+        "1"
+      );
+    }
+    for (const a of document.querySelectorAll("a")) {
+      const text = a.textContent.trim();
+      if (text.length > 30 || !PROMO_PATTERN.test(text)) continue;
+      (a.closest("nav, li") ?? a).setAttribute("data-czse-promo", "1");
+    }
+  };
+
   setInterval(async () => {
     await czse.ready;
     tagSidebarSections();
+    if (czse.settings.hidePromo) tagPromoBanners();
   }, 2000);
 })();
