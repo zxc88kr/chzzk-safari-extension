@@ -18,15 +18,41 @@
       '#aside-chatting pre[contenteditable="true"], #aside-chatting [contenteditable="true"], #aside-chatting textarea'
     );
 
-  const insertText = (text) => {
+  const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+  const verify = (text) => {
     const input = findInput();
+    return !!input && (input.textContent ?? input.value ?? "").includes(text);
+  };
+
+  // 시도 체인: execCommand → 가짜 paste 이벤트. 포커스로 입력창이
+  // 리렌더될 수 있어 매 단계마다 요소를 다시 찾고 잠깐 기다린다.
+  const tryInsert = async (text) => {
+    let input = findInput();
     if (!input) return false;
     input.focus();
+    await wait(60);
+
+    input = findInput();
+    if (!input) return false;
     const selection = window.getSelection();
     selection.selectAllChildren(input);
     selection.collapseToEnd();
     document.execCommand("insertText", false, text);
-    return (input.textContent ?? input.value ?? "").includes(text);
+    await wait(60);
+    if (verify(text)) return true;
+
+    try {
+      const dt = new DataTransfer();
+      dt.setData("text/plain", text);
+      findInput()?.dispatchEvent(
+        new ClipboardEvent("paste", { clipboardData: dt, bubbles: true, cancelable: true })
+      );
+      await wait(60);
+      if (verify(text)) return true;
+    } catch {
+      /* ClipboardEvent 생성 미지원 등 */
+    }
+    return false;
   };
 
   let button = null;
@@ -50,8 +76,8 @@
     }, 2500);
   };
 
-  const useMessage = (message) => {
-    if (insertText(message)) return;
+  const useMessage = async (message) => {
+    if (await tryInsert(message)) return;
     // 직접 입력 실패 → 클립보드 폴백
     navigator.clipboard?.writeText(message).catch(() => {});
     findInput()?.focus();
@@ -158,10 +184,14 @@
     if (button?.isConnected) return;
     closePanel();
 
-    // 후원하기 버튼 오른쪽에 배치 (없으면 채팅 영역 우하단 플로팅으로 폴백)
-    const anchor = [...aside.querySelectorAll("button")].find((b) =>
-      (b.getAttribute("aria-label") ?? "").includes("후원")
-    );
+    // 후원하기 버튼 오른쪽에 배치 (없으면 채팅 영역 우하단 플로팅으로 폴백).
+    // "후원하기"는 aria-label 이 아니라 버튼 텍스트라 둘 다 확인하고,
+    // 채팅 로그 안의 후원 관련 버튼은 제외한다.
+    const anchor = [...aside.querySelectorAll("button")].find((b) => {
+      if (b.closest('[role="log"]')) return false;
+      const label = `${b.getAttribute("aria-label") ?? ""} ${b.textContent ?? ""}`;
+      return label.includes("후원");
+    });
     button = document.createElement("button");
     button.type = "button";
     button.title = "자주 쓰는 문구";
