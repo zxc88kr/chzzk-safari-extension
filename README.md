@@ -46,7 +46,9 @@ open "app/Chzzk Safari Extension/Chzzk Safari Extension.xcodeproj"
 > 자동 음소거 해제 등 일부 기능은 Safari → 설정 → 웹 사이트 → 자동 재생에서 chzzk.naver.com을 "모든 자동 재생 허용"으로 둬야 제대로 동작합니다.
 
 <details>
-<summary>서명 없이 임시로 불러오기 (개발용)</summary>
+<summary><b>서명 없이 임시로 불러오기 (개발용)</b></summary>
+
+<br>
 
 1. Safari → 설정 → 고급에서 "웹 개발자용 기능 보기"를 켭니다.
 2. 개발자 탭에서 "허용되지 않은 확장 프로그램 허용"을 켭니다.
@@ -54,6 +56,7 @@ open "app/Chzzk Safari Extension/Chzzk Safari Extension.xcodeproj"
 4. 소스를 고친 뒤에는 확장을 "다시 로드"하고 페이지를 새로고침합니다.
 
 임시로 불러온 확장은 다시 로드할 때마다 저장 데이터가 초기화됩니다.
+
 </details>
 
 ## 구조
