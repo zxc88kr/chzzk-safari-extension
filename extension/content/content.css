@@ -173,20 +173,21 @@ html.czse-hide-offline
   vertical-align: middle;
 }
 
-/* 채팅 영역 네이티브 툴팁 스타일 재현: 불투명 진회색, 작은 라운드, 컴팩트 */
-.czse-macro-inline::after {
+/* 폴백 툴팁 — 네이티브 _label_ 복제가 실패했을 때만. 실측값(12px/400, 0 9px,
+   높이 27, 라운드 6, rgb(46,48,51)) 재현 */
+.czse-macro-inline:not(.czse-native-label)::after {
   content: attr(aria-label);
   position: absolute;
   bottom: calc(100% + 6px);
   left: 50%;
   transform: translateX(-50%);
-  padding: 6px 10px;
-  border-radius: 8px;
-  background: #2e2f33;
+  padding: 0 9px;
+  border-radius: 6px;
+  background: rgb(46, 48, 51);
   color: #fff;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 400;
-  line-height: 15px;
+  line-height: 27px;
   letter-spacing: normal;
   white-space: nowrap;
   opacity: 0;
@@ -195,9 +196,8 @@ html.czse-hide-offline
   z-index: 100;
 }
 
-.czse-macro-inline:hover::after {
+.czse-macro-inline:not(.czse-native-label):hover::after {
   opacity: 1;
-  transition-delay: 0.35s;
 }
 
 /* 앵커를 못 찾았을 때 채팅 우하단 플로팅 폴백 */

@@ -219,6 +219,15 @@
     // 같은 줄 마지막 아이콘 버튼(미션 후원)의 클래스를 이어받아 크기·정렬을 맞춘다
     const template = [...donationArea.querySelectorAll("button")].pop();
     button.className = `${template?.className ?? ""} czse-macro-button czse-macro-inline`.trim();
+    // 네이티브 툴팁(_label_) 요소를 복제해 넣으면 스타일·호버 타이밍까지 동일해진다
+    const nativeLabel = donationArea.querySelector('[class*="_label_"]');
+    if (nativeLabel) {
+      const label = document.createElement(nativeLabel.tagName);
+      label.className = nativeLabel.className;
+      label.textContent = "자주 쓰는 문구";
+      button.appendChild(label);
+      button.classList.add("czse-native-label"); // CSS 폴백 툴팁 비활성화 플래그
+    }
     donationArea.appendChild(button);
   }, 1000);
 })();
