@@ -14,7 +14,9 @@ const CZSE_DEFAULTS = {
   // 화면
   staticLogo: true, // 좌상단 로고 애니메이션을 정적 로고로 교체
   hideBlocked: false, // 차단한 방송 카드 완전 제거
-  hideRecommended: false, // 사이드바 추천 섹션 숨기기
+  hideRecommended: false, // 사이드바 추천·파트너 섹션 숨기기
+  hideSidebarCategory: false, // 사이드바 인기 카테고리 숨기기
+  hideSidebarSchedule: false, // 사이드바 방송 일정 숨기기
   hideOffline: false, // 사이드바 오프라인 채널 숨기기
   hideRecommendedLive: false, // 홈 상단 추천 라이브 숨기기
 

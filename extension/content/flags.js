@@ -8,6 +8,8 @@
     hideRecommended: "czse-hide-recommended",
     hideOffline: "czse-hide-offline",
     hideRecommendedLive: "czse-hide-rec-live",
+    hideSidebarCategory: "czse-hide-category",
+    hideSidebarSchedule: "czse-hide-schedule",
   };
 
   const apply = () => {
@@ -25,13 +27,19 @@
   // 숨김 자체는 content.css 가 태그 + html 클래스 조합으로 처리한다.
   // (클래스명 해시에 의존하지 않아 치지직 리빌드에 강하다)
 
-  // 사이드바 추천/파트너 섹션: 헤더 텍스트로 판별
+  // 사이드바 섹션: 헤더 텍스트로 종류를 판별해 태깅 (숨김 여부는 CSS 가 결정)
+  const SECTION_TYPES = [
+    { type: "rec", pattern: /추천|파트너/ },
+    { type: "category", pattern: /카테고리/ },
+    { type: "schedule", pattern: /일정/ },
+  ];
   const tagSidebarSections = () => {
     const sidebar = document.getElementById("sidebar");
     for (const nav of sidebar?.querySelectorAll("nav") ?? []) {
-      if (nav.hasAttribute("data-czse-rec-section")) continue;
+      if (nav.hasAttribute("data-czse-section")) continue;
       const header = nav.querySelector('[class*="header"]')?.textContent ?? "";
-      if (/추천|파트너/.test(header)) nav.setAttribute("data-czse-rec-section", "1");
+      const match = SECTION_TYPES.find(({ pattern }) => pattern.test(header));
+      if (match) nav.setAttribute("data-czse-section", match.type);
     }
   };
 
@@ -55,7 +63,7 @@
 
   setInterval(async () => {
     await czse.ready;
-    if (czse.settings.hideRecommended) tagSidebarSections();
+    tagSidebarSections();
     if (czse.settings.hideRecommendedLive) tagHomeRecommend();
   }, 2000);
 })();

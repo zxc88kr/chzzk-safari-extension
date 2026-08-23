@@ -73,8 +73,10 @@ html.czse-hide-rec-live [data-czse-home-rec="1"] {
   display: none !important;
 }
 
-/* 사이드바 추천 섹션 (flags.js 가 텍스트 매칭으로 태깅) */
-html.czse-hide-recommended [data-czse-rec-section="1"] {
+/* 사이드바 섹션 숨기기 (flags.js 가 헤더 텍스트로 태깅) */
+html.czse-hide-recommended [data-czse-section="rec"],
+html.czse-hide-category [data-czse-section="category"],
+html.czse-hide-schedule [data-czse-section="schedule"] {
   display: none !important;
 }
 
