@@ -102,12 +102,19 @@ html.czse-hide-offline
   border: none;
   background: transparent;
   color: #fff;
-  opacity: 0.9;
+  opacity: 0;
   cursor: pointer;
   transition: opacity 0.15s ease, color 0.15s ease;
 }
 
-.czse-player-btn:hover {
+/* 플레이어 호버 시에만 표시 (지연 칩과 동일한 규칙) */
+.pzp-pc:hover .czse-player-btn,
+#live_player_layout:hover .czse-player-btn {
+  opacity: 0.9;
+}
+
+.pzp-pc:hover .czse-player-btn:hover,
+#live_player_layout:hover .czse-player-btn:hover {
   opacity: 1;
 }
 
@@ -118,6 +125,20 @@ html.czse-hide-offline
 
 .czse-player-btn.czse-btn-error {
   color: #ff6b6b;
+}
+
+.czse-player-btn.czse-btn-busy {
+  color: #00ffa3;
+  animation: czse-pulse 0.8s ease infinite alternate;
+}
+
+@keyframes czse-pulse {
+  from {
+    opacity: 0.4;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 /* ── 자주 쓰는 문구 ─────────────────────────────────────── */
