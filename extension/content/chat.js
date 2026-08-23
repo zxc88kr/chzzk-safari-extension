@@ -11,13 +11,15 @@
 
   const stamp = (item) => {
     if (item.querySelector(`.${CLASS}`)) return;
-    const span = document.createElement("span");
-    span.className = CLASS;
-    span.textContent = czse.util.timeHMS(new Date());
+    // 닉네임이 있는 메시지(유저 채팅)에만 찍는다 — 환영/필터링 안내 등 시스템 공지 제외
     const nickname = item.querySelector(
       '[class*="live_chatting_message_nickname__"], [class*="_nickname_"]'
     );
-    (nickname || item).prepend(span);
+    if (!nickname) return;
+    const span = document.createElement("span");
+    span.className = CLASS;
+    span.textContent = czse.util.timeHMS(new Date());
+    nickname.prepend(span);
   };
 
   const isChatItem = (el) =>
