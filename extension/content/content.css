@@ -92,6 +92,34 @@ html.czse-hide-offline
   display: none !important;
 }
 
+/* ── 플레이어 추가 버튼 (PIP·캡처) ───────────────────────── */
+.czse-player-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  align-self: stretch;
+  border: none;
+  background: transparent;
+  color: #fff;
+  opacity: 0.9;
+  cursor: pointer;
+  transition: opacity 0.15s ease, color 0.15s ease;
+}
+
+.czse-player-btn:hover {
+  opacity: 1;
+}
+
+.czse-player-btn svg {
+  width: 22px;
+  height: 22px;
+}
+
+.czse-player-btn.czse-btn-error {
+  color: #ff6b6b;
+}
+
 /* ── 자주 쓰는 문구 ─────────────────────────────────────── */
 .czse-macro-button {
   position: absolute;

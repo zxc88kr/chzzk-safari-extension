@@ -9,6 +9,8 @@ const CZSE_DEFAULTS = {
   autoWide: true, // 라이브 진입 시 자동 넓은 화면
   autoLumber: true, // 통나무(파워) 자동 획득
   autoUnmute: true, // 라이브 진입 시 자동 음소거 해제
+  pipButton: true, // 플레이어에 PIP 버튼 추가
+  captureButton: true, // 플레이어에 화면 캡처 버튼 추가
 
   // 채팅
   chatTimestamp: true, // 채팅 타임스탬프
