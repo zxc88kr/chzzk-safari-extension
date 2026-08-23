@@ -4,8 +4,9 @@
 (() => {
   const BAR_SELECTOR = ".pzp-pc__bottom-buttons-right";
 
-  const PIP_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><rect x="12" y="12" width="8" height="6" rx="1" fill="currentColor" stroke="none"/></svg>`;
-  const CAPTURE_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8a2 2 0 0 1 2-2h1.5l1.5-2h8l1.5 2H21a0 0 0 0 1 0 0v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="12" cy="13" r="4"/></svg>`;
+  // 네이티브 pzp 아이콘 규격에 맞춤: 36×36 뷰박스, 중앙 ~19px 글리프, 선 1.6px
+  const PIP_SVG = `<svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="8.5" y="11" width="19" height="14" rx="2"/><rect x="18.5" y="18" width="7" height="5" rx="1" fill="currentColor" stroke="none"/></svg>`;
+  const CAPTURE_SVG = `<svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 14.5a2 2 0 0 1 2-2h2.4l1.5-2h5.2l1.5 2h2.4a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2z"/><circle cx="18" cy="18.2" r="3.2"/></svg>`;
 
   const makeButton = (className, label, svg, onClick) => {
     const button = document.createElement("button");
