@@ -98,7 +98,9 @@ html.czse-hide-offline
   align-items: center;
   justify-content: center;
   width: 36px;
-  align-self: stretch;
+  height: 36px;
+  margin-left: 6px; /* pzp 버튼들과 동일 간격 (실측) */
+  align-self: center;
   border: none;
   background: transparent;
   color: #fff;
