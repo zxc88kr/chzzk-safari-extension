@@ -36,7 +36,8 @@
         "content/logo.js",
         "content/preview.js",
         "content/sidebar.js",
-        "content/autoreload.js"
+        "content/autoreload.js",
+        "content/channelchat.js"
       ],
       "css": ["content/content.css"],
       "run_at": "document_idle"
