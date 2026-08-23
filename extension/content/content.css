@@ -145,15 +145,20 @@ html.czse-hide-offline
 .czse-macro-button {
   border: none;
   background: none;
-  font-size: 16px;
   line-height: 1;
   cursor: pointer;
-  opacity: 0.75;
-  transition: opacity 0.15s ease;
+  color: var(--color-content-03, #9da1a8);
+  transition: color 0.15s ease;
 }
 
 .czse-macro-button:hover {
-  opacity: 1;
+  color: var(--color-content-01, #fff);
+}
+
+.czse-macro-button svg {
+  width: 20px;
+  height: 20px;
+  display: block;
 }
 
 /* 후원하기 오른쪽 인라인 배치 */
@@ -161,8 +166,6 @@ html.czse-hide-offline
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
   vertical-align: middle;
 }
 
