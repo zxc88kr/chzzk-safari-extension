@@ -33,6 +33,7 @@
         "content/util.js",
         "content/player.js",
         "content/chat.js",
+        "content/logo.js",
         "content/preview.js",
         "content/sidebar.js",
         "content/autoreload.js"

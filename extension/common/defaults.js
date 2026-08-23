@@ -10,6 +10,9 @@ const CZSE_DEFAULTS = {
   // 채팅
   chatTimestamp: true, // 채팅 타임스탬프
 
+  // 화면
+  staticLogo: true, // 좌상단 로고 애니메이션을 정적 로고로 교체
+
   // 탐색
   hoverPreview: true, // 방송 카드/사이드바 호버 미리보기
   previewDelay: 0.5, // 미리보기 뜨기까지 지연(초)
