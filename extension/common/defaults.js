@@ -8,6 +8,7 @@ const CZSE_DEFAULTS = {
   seekStep: 5, // 방향키 이동 간격(초)
   autoWide: true, // 라이브 진입 시 자동 넓은 화면
   autoLumber: true, // 통나무(파워) 자동 획득
+  autoUnmute: true, // 라이브 진입 시 자동 음소거 해제
 
   // 채팅
   chatTimestamp: true, // 채팅 타임스탬프
