@@ -175,14 +175,13 @@
     await czse.ready;
     if (messages === null) await load();
     const aside = document.getElementById("aside-chatting");
+    const existing = [...document.querySelectorAll(".czse-macro-button")];
     if (!czse.settings.chatMacros || !aside) {
-      button?.remove();
+      existing.forEach((el) => el.remove());
       button = null;
       closePanel();
       return;
     }
-    if (button?.isConnected) return;
-    closePanel();
 
     // 후원 액션 줄(치즈 후원하기 | 후원·영상·미션 아이콘)의 맨 끝에 배치.
     // 버튼 2개 이상을 포함하는 가장 작은 _donation_ 컨테이너 = 액션 줄.
@@ -191,6 +190,24 @@
         .filter((el) => !el.closest('[role="log"]') && el.querySelectorAll("button").length >= 2)
         .sort((a, b) => a.querySelectorAll("*").length - b.querySelectorAll("*").length)[0] ??
       null;
+    if (!donationArea) {
+      // 리렌더 중이거나 후원 줄이 없는 화면 — 버튼을 만들지 않는다 (중복 방지)
+      existing.forEach((el) => el.remove());
+      button = null;
+      return;
+    }
+
+    // 올바른 위치의 버튼 하나만 남기고 전부 정리 (SPA 리렌더로 생긴 중복 제거)
+    const valid = existing.find((el) => donationArea.contains(el));
+    existing.forEach((el) => {
+      if (el !== valid) el.remove();
+    });
+    if (valid) {
+      button = valid;
+      return;
+    }
+    closePanel();
+
     button = document.createElement("button");
     button.type = "button";
     button.setAttribute("aria-label", "자주 쓰는 문구"); // CSS 툴팁 겸용 (title 은 이중 툴팁이라 제외)
@@ -199,15 +216,9 @@
       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 20l1.9-4.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/><path d="M8.5 10.5h7M8.5 13.5h4.5"/></svg>';
     button.addEventListener("mousedown", (e) => e.preventDefault());
     button.addEventListener("click", () => (panel ? closePanel() : openPanel()));
-    if (donationArea) {
-      // 같은 줄 마지막 아이콘 버튼(미션 후원)의 클래스를 이어받아 크기·정렬을 맞춘다
-      const template = [...donationArea.querySelectorAll("button")].pop();
-      button.className = `${template?.className ?? ""} czse-macro-button czse-macro-inline`.trim();
-      donationArea.appendChild(button);
-    } else {
-      button.className = "czse-macro-button czse-macro-floating";
-      if (getComputedStyle(aside).position === "static") aside.style.position = "relative";
-      aside.appendChild(button);
-    }
+    // 같은 줄 마지막 아이콘 버튼(미션 후원)의 클래스를 이어받아 크기·정렬을 맞춘다
+    const template = [...donationArea.querySelectorAll("button")].pop();
+    button.className = `${template?.className ?? ""} czse-macro-button czse-macro-inline`.trim();
+    donationArea.appendChild(button);
   }, 1000);
 })();
