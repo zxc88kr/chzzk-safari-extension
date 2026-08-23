@@ -25,4 +25,6 @@ open app/Chzzk\ Safari\ Extension/Chzzk\ Safari\ Extension.xcodeproj
 
 ## 참고
 
-기능 아이디어는 [chzzk-plus](https://github.com/kyechan99/chzzk-plus), [cheese-knife](https://github.com/jebibot/cheese-knife) 참고.
+기능 아이디어와 치지직 DOM/API 접근 방식은 [chzzk-plus](https://github.com/kyechan99/chzzk-plus)와 [cheese-knife](https://github.com/jebibot/cheese-knife)(둘 다 MIT)를 참고했다. 사이드바 갱신의 React effect 재실행 기법은 cheese-knife의 접근을 따랐다.
+
+MIT License.

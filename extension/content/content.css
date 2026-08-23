@@ -38,8 +38,9 @@
 
 /* ── 채팅 타임스탬프 ─────────────────────────────────────── */
 .czse-ts {
-  margin-right: 4px;
-  font-size: 11px;
+  margin-right: 5px;
+  font: inherit; /* 채팅 텍스트와 동일한 폰트·크기 */
+  font-weight: 400;
   color: var(--color-content-04, #81858c);
   font-variant-numeric: tabular-nums;
 }
