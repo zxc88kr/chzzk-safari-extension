@@ -23,14 +23,6 @@ if [ ! -d "$BUILT" ]; then
   exit 1
 fi
 
-# 서명 방식 확인 (개발 인증서여야 storage 가 영구 유지된다).
-# codesign 상세 출력은 stderr 로 나오므로 2>&1 로 합쳐서 검사한다.
-if codesign -dvvv "$BUILT" 2>&1 | grep -q "Authority=Apple Development"; then
-  echo "  서명: Apple Development ✓"
-else
-  echo "⚠ 개발 인증서로 서명되지 않았습니다 (ad-hoc?). Xcode 서명 설정을 확인하세요." >&2
-fi
-
 echo "▶ 설치 중…"
 osascript -e 'quit app "Chzzk Safari Extension"' 2>/dev/null || true
 sleep 1
@@ -39,6 +31,14 @@ ditto "$BUILT" "$DEST"
 
 # 빌드 캐시 정리 (중복 등록 방지)
 rm -rf "$DERIVED"
+
+# 설치본 서명 확인 (개발 인증서여야 storage 가 영구 유지된다)
+SIGN_AUTH="$(codesign -dvvv "$DEST" 2>&1 | grep "^Authority=" | head -1)"
+if echo "$SIGN_AUTH" | grep -q "Apple Development"; then
+  echo "  서명 ✓ ${SIGN_AUTH#Authority=}"
+else
+  echo "⚠ 개발 인증서로 서명되지 않았습니다 (${SIGN_AUTH#Authority=}). Xcode 서명 설정을 확인하세요." >&2
+fi
 
 open "$DEST"
 echo "✓ 완료 → $DEST"
