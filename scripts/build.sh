@@ -33,9 +33,11 @@ if ! xcodebuild -project "$PROJECT" -scheme "$SCHEME" -configuration Release \
   DEVELOPMENT_TEAM="$TEAM_ID" CODE_SIGN_STYLE=Automatic \
   -allowProvisioningUpdates build >"$BUILD_LOG" 2>&1; then
   echo "✗ 빌드 실패" >&2
-  # 에러 줄을 우선 보여주고, 없으면 마지막 로그로 대체
+  # 에러 줄을 우선 보여주고, 없으면 마지막 로그로 대체.
+  # head 대신 sed 를 쓰는 이유: 로그가 크면 head 가 파이프를 먼저 닫아
+  # grep 이 SIGPIPE 로 죽고, pipefail 때문에 아래 안내까지 통째로 날아간다.
   if grep -qE "error:|Signing for|requires a development team" "$BUILD_LOG"; then
-    grep -E "error:|Signing for|requires a development team" "$BUILD_LOG" | head -10 | sed 's/^/  /' >&2
+    grep -E "error:|Signing for|requires a development team" "$BUILD_LOG" | sed -n '1,10p' | sed 's/^/  /' >&2
   else
     tail -20 "$BUILD_LOG" | sed 's/^/  /' >&2
   fi
@@ -60,9 +62,13 @@ ditto "$BUILT" "$DEST"
 # 빌드 캐시 정리 (중복 등록 방지)
 rm -rf "$DERIVED"
 
-# 설치본 서명 확인 (개발 인증서여야 storage 가 영구 유지된다)
-SIGN_AUTH="$(codesign -dvvv "$DEST" 2>&1 | grep "^Authority=" | head -1)"
-if echo "$SIGN_AUTH" | grep -q "Apple Development"; then
+# 설치본 서명 확인 (개발 인증서여야 storage 가 영구 유지된다).
+# ad-hoc 서명이면 Authority 줄이 아예 없어 grep 이 실패하는데, || true 가 없으면
+# pipefail 에 걸려 아래 안내가 전부 실행되지 않는다.
+SIGN_AUTH="$(codesign -dvvv "$DEST" 2>&1 | grep -m1 "^Authority=" || true)"
+if [ -z "$SIGN_AUTH" ]; then
+  echo "⚠ 서명 정보를 읽지 못했습니다. Xcode 서명 설정을 확인하세요." >&2
+elif echo "$SIGN_AUTH" | grep -q "Apple Development"; then
   echo "  서명 ✓ ${SIGN_AUTH#Authority=}"
 else
   echo "⚠ 개발 인증서로 서명되지 않았습니다 (${SIGN_AUTH#Authority=}). Xcode 서명 설정을 확인하세요." >&2

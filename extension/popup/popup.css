@@ -1,10 +1,14 @@
+/* 치지직의 두 브랜드 색으로 역할을 나눈다.
+   초록(라이브) = 켜진 기능, 노랑(치즈) = 사용자 조치가 필요한 알림. */
 :root {
-  --bg: #141517;
-  --surface: #1d1e22;
-  --border: rgba(255, 255, 255, 0.07);
-  --text: #f2f3f5;
-  --text-dim: #81858c;
-  --accent: #00ffa3;
+  --bg: #16171a;
+  --panel: #1c1d21;
+  --line: rgba(255, 255, 255, 0.06);
+  --ink: #f0f1f3;
+  --ink-2: #9aa0a8;
+  --ink-3: #6b7079;
+  --live: #00ffa3;
+  --cheese: #ffc63c;
 }
 
 * {
@@ -14,74 +18,157 @@
 }
 
 body {
-  width: 320px;
+  width: 328px;
   background: var(--bg);
-  color: var(--text);
-  font-family: -apple-system, "Apple SD Gothic Neo", "Pretendard", sans-serif;
+  color: var(--ink);
+  font-family: -apple-system, "Apple SD Gothic Neo", sans-serif;
   font-size: 13px;
+  line-height: 1.45;
   -webkit-font-smoothing: antialiased;
   user-select: none;
 }
 
-header {
+/* ── 상단 바 ─────────────────────────────────────────────── */
+.bar {
   display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 16px 16px 12px;
+  align-items: baseline;
+  gap: 6px;
+  padding: 14px 16px 12px;
+  border-bottom: 1px solid var(--line);
 }
 
-.logo-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--accent);
-  box-shadow: 0 0 8px rgba(0, 255, 163, 0.6);
-}
-
-h1 {
+.mark {
   font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.02em;
+  font-weight: 800;
+  letter-spacing: -0.01em;
 }
 
-.version {
+.mark-sub {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink-3);
+}
+
+.ver {
   margin-left: auto;
-  color: var(--text-dim);
   font-size: 11px;
+  color: var(--ink-3);
   font-variant-numeric: tabular-nums;
 }
 
+/* ── 업데이트 알림 ───────────────────────────────────────── */
+.update {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  background: rgba(255, 198, 60, 0.09);
+  border-bottom: 1px solid var(--line);
+}
+
+.update-copy {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.update-copy strong {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--cheese);
+}
+
+.update-copy span {
+  font-size: 11px;
+  color: var(--ink-3);
+}
+
+#update-btn {
+  flex-shrink: 0;
+  margin-left: auto;
+  padding: 5px 9px;
+  border: 1px solid rgba(255, 198, 60, 0.35);
+  border-radius: 6px;
+  background: none;
+  color: var(--cheese);
+  font: inherit;
+  font-size: 11px;
+  cursor: pointer;
+  transition: background 0.12s ease;
+}
+
+#update-btn:hover {
+  background: rgba(255, 198, 60, 0.14);
+}
+
+#update-btn.done {
+  border-color: rgba(0, 255, 163, 0.35);
+  color: var(--live);
+}
+
+/* ── 섹션 ────────────────────────────────────────────────── */
 section {
-  padding: 4px 16px 12px;
+  padding: 10px 16px 12px;
 }
 
 section + section {
-  border-top: 1px solid var(--border);
-  padding-top: 12px;
+  border-top: 1px solid var(--line);
 }
 
-h2 {
-  font-size: 11px;
+.sec-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.sec-head h2 {
+  font-size: 12px;
   font-weight: 600;
-  color: var(--text-dim);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  margin-bottom: 6px;
+  color: var(--ink);
 }
 
+/* 켜진 기능 수를 방송 장비 미터처럼 보여준다 */
+.meter {
+  display: flex;
+  gap: 2px;
+  margin-left: auto;
+}
+
+.meter i {
+  width: 3px;
+  height: 9px;
+  border-radius: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  transition: background 0.15s ease;
+}
+
+.meter i.on {
+  background: var(--live);
+}
+
+.count {
+  min-width: 12px;
+  font-size: 11px;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+/* ── 행 ──────────────────────────────────────────────────── */
 .row {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 8px 0;
+  padding: 7px 0;
   cursor: pointer;
 }
 
 .text {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 1px;
   min-width: 0;
 }
 
@@ -90,61 +177,66 @@ h2 {
 }
 
 .label output {
-  color: var(--accent);
-  font-weight: 600;
+  color: var(--ink-2);
+  font-variant-numeric: tabular-nums;
 }
 
 .desc {
-  font-size: 11px;
-  color: var(--text-dim);
+  font-size: 11.5px;
+  color: var(--ink-3);
   line-height: 1.4;
 }
 
-/* 토글 스위치 */
+/* ── 스위치 ──────────────────────────────────────────────── */
 .switch {
   appearance: none;
   -webkit-appearance: none;
   flex-shrink: 0;
-  width: 38px;
-  height: 22px;
-  border-radius: 999px;
-  background: var(--surface);
-  border: 1px solid var(--border);
+  width: 34px;
+  height: 20px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.07);
   position: relative;
   cursor: pointer;
-  transition: background 0.18s ease;
+  transition: background 0.15s ease;
 }
 
 .switch::after {
   content: "";
   position: absolute;
-  top: 2px;
-  left: 2px;
-  width: 16px;
-  height: 16px;
+  top: 3px;
+  left: 3px;
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
-  background: var(--text-dim);
-  transition: transform 0.18s ease, background 0.18s ease;
+  background: var(--ink-3);
+  transition: transform 0.15s ease, background 0.15s ease;
 }
 
+/* 켜짐은 노브 위치와 밝기로만 알린다. 초록은 섹션 미터에만 쓴다 —
+   스위치마다 색을 넣으면 24개가 동시에 빛나 위계가 무너진다. */
 .switch:checked {
-  background: rgba(0, 255, 163, 0.18);
-  border-color: rgba(0, 255, 163, 0.4);
+  background: rgba(255, 255, 255, 0.18);
 }
 
 .switch:checked::after {
-  transform: translateX(16px);
-  background: var(--accent);
+  transform: translateX(14px);
+  background: var(--ink);
 }
 
-/* 슬라이더 */
+.switch:focus-visible {
+  outline: 2px solid var(--live);
+  outline-offset: 2px;
+}
+
+/* ── 슬라이더 ────────────────────────────────────────────── */
 .range-row {
   flex-direction: column;
   align-items: stretch;
-  gap: 6px;
+  gap: 7px;
+  padding-bottom: 9px;
 }
 
-/* 부모 토글이 꺼지면 숨김 */
 .row-hidden {
   display: none;
 }
@@ -153,18 +245,29 @@ input[type="range"] {
   appearance: none;
   -webkit-appearance: none;
   width: 100%;
-  height: 4px;
+  height: 3px;
   border-radius: 2px;
-  background: var(--surface);
+  background: rgba(255, 255, 255, 0.1);
   outline: none;
 }
 
 input[type="range"]::-webkit-slider-thumb {
   appearance: none;
   -webkit-appearance: none;
-  width: 14px;
-  height: 14px;
+  width: 13px;
+  height: 13px;
   border-radius: 50%;
-  background: var(--accent);
+  background: var(--ink);
   cursor: pointer;
+}
+
+input[type="range"]:focus-visible::-webkit-slider-thumb {
+  outline: 2px solid var(--live);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
 }

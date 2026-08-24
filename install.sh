@@ -21,24 +21,40 @@ die() {
 # ── 1. 사전 조건 ────────────────────────────────────────────
 [ "$(uname -s)" = "Darwin" ] || die "macOS 에서만 설치할 수 있습니다."
 
-# macOS 13 (Ventura) 이상 필요 — manifest v3 확장은 Safari 16.4+ 에서만 동작한다
-OS_MAJOR="$(sw_vers -productVersion | cut -d. -f1)"
-if [ "$OS_MAJOR" -lt 13 ] 2>/dev/null; then
-  die "macOS 13 (Ventura) 이상이 필요합니다. (현재 $(sw_vers -productVersion))"
+# 빌드에 Xcode 16 이상이 필요하고(프로젝트 포맷 objectVersion 77),
+# Xcode 16 은 macOS 14.5 이상에서만 설치된다.
+OS_VER="$(sw_vers -productVersion)"
+OS_MAJOR="${OS_VER%%.*}"
+OS_MINOR="$(echo "$OS_VER" | cut -d. -f2)"
+if [ "$OS_MAJOR" -lt 14 ] 2>/dev/null ||
+  { [ "$OS_MAJOR" -eq 14 ] && [ "${OS_MINOR:-0}" -lt 5 ] 2>/dev/null; }; then
+  die "macOS 14.5 이상이 필요합니다. (현재 $OS_VER)" \
+    "" \
+    "빌드에 Xcode 16 이상이 필요한데, 그 버전은 macOS 14.5 부터 설치됩니다."
 fi
 
 say "Xcode 확인…"
 # CLT 만 깔린 경우 xcodebuild 는 스텁이라 실패한다 — 실제 실행으로 판별
-if ! xcodebuild -version >/dev/null 2>&1; then
-  die "Xcode 가 필요합니다." \
-    "" \
-    "Safari 확장은 앱으로 포장해 서명해야 하고, 무료 Apple ID 로 서명하려면 Xcode 가 있어야 합니다." \
-    "(명령어 도구만으로는 안 되며, App Store 에서 Xcode 를 설치해야 합니다)" \
+if ! XCODE_VER="$(xcodebuild -version 2>/dev/null | head -1)"; then
+  die "Xcode 를 찾지 못했습니다." \
+    "(설치돼 있다면 초기 설정이 끝나지 않았거나, 명령어 도구를 보고 있는 상태입니다)" \
     "" \
     "  1) App Store 에서 'Xcode' 설치 (약 4GB, 시간이 꽤 걸립니다)" \
     "  2) Xcode 를 한 번 실행해 초기 설정 완료" \
     "  3) Xcode → Settings(⌘,) → Accounts → '+' → Apple ID 로그인" \
-    "  4) 이 명령을 다시 실행"
+    "  4) 이 명령을 다시 실행" \
+    "" \
+    "이미 설치했는데도 이 메시지가 나오면 아래 두 줄을 차례로 실행하세요." \
+    "  sudo xcode-select -s /Applications/Xcode.app/Contents/Developer" \
+    "  sudo xcodebuild -license accept"
+fi
+
+# 프로젝트 포맷(objectVersion 77)이 Xcode 16 이상만 지원한다
+XCODE_MAJOR="$(echo "$XCODE_VER" | sed -n 's/^Xcode \([0-9]*\).*/\1/p')"
+if [ -n "$XCODE_MAJOR" ] && [ "$XCODE_MAJOR" -lt 16 ] 2>/dev/null; then
+  die "Xcode 16 이상이 필요합니다. (현재 $XCODE_VER)" \
+    "" \
+    "App Store 에서 Xcode 를 최신 버전으로 업데이트한 뒤 다시 실행하세요."
 fi
 
 say "Apple ID 팀 감지…"
