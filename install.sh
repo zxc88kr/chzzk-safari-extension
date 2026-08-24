@@ -73,7 +73,7 @@ else
 fi
 
 # ── 3. 빌드 + 설치 ──────────────────────────────────────────
-CZSE_TEAM_ID="$TEAM_ID" bash "$SRC_DIR/scripts/build.sh"
+CZSE_TEAM_ID="$TEAM_ID" CZSE_OPEN_PREFS=1 bash "$SRC_DIR/scripts/build.sh"
 
 # ── 4. 마무리 안내 ──────────────────────────────────────────
 cat <<'EOF'

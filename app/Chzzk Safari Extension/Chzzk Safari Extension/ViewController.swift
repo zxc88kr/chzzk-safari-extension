@@ -38,6 +38,12 @@ class ViewController: NSViewController, WKNavigationDelegate, WKScriptMessageHan
                 } else {
                     webView.evaluateJavaScript("show(\(state.isEnabled), false)")
                 }
+
+                // 설치 직후(install.sh 가 --open-prefs 로 실행)이고 아직 꺼져 있으면
+                // Safari 확장 설정을 바로 열어준다. 이미 켜져 있으면 방해하지 않는다.
+                if CommandLine.arguments.contains("--open-prefs") && !state.isEnabled {
+                    self.openExtensionPreferences()
+                }
             }
         }
     }
@@ -47,6 +53,10 @@ class ViewController: NSViewController, WKNavigationDelegate, WKScriptMessageHan
             return;
         }
 
+        openExtensionPreferences()
+    }
+
+    private func openExtensionPreferences() {
         SFSafariApplication.showPreferencesForExtension(withIdentifier: extensionBundleIdentifier) { error in
             DispatchQueue.main.async {
                 NSApplication.shared.terminate(nil)

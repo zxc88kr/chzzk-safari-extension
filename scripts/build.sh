@@ -28,7 +28,7 @@ echo "▶ 빌드 중… (팀 $TEAM_ID)"
 # 성공하면 조용히, 실패하면 로그를 보여준다 (xcodebuild 는 무해한 경고를 많이 낸다)
 BUILD_LOG="$(mktemp -t czse-build)"
 trap 'rm -f "$BUILD_LOG"' EXIT
-if ! xcodebuild -project "$PROJECT" -scheme "$SCHEME" -configuration Debug \
+if ! xcodebuild -project "$PROJECT" -scheme "$SCHEME" -configuration Release \
   -derivedDataPath "$DERIVED" \
   DEVELOPMENT_TEAM="$TEAM_ID" CODE_SIGN_STYLE=Automatic \
   -allowProvisioningUpdates build >"$BUILD_LOG" 2>&1; then
@@ -44,7 +44,7 @@ if ! xcodebuild -project "$PROJECT" -scheme "$SCHEME" -configuration Debug \
   exit 1
 fi
 
-BUILT="$DERIVED/Build/Products/Debug/$APP_NAME"
+BUILT="$DERIVED/Build/Products/Release/$APP_NAME"
 if [ ! -d "$BUILT" ]; then
   echo "✗ 빌드 산물을 찾을 수 없습니다: $BUILT" >&2
   exit 1
@@ -68,6 +68,11 @@ else
   echo "⚠ 개발 인증서로 서명되지 않았습니다 (${SIGN_AUTH#Authority=}). Xcode 서명 설정을 확인하세요." >&2
 fi
 
-open "$DEST"
+# CZSE_OPEN_PREFS=1 이면 앱이 Safari 확장 설정을 바로 연다 (install.sh 최초 설치용)
+if [ "${CZSE_OPEN_PREFS:-0}" = "1" ]; then
+  open "$DEST" --args --open-prefs
+else
+  open "$DEST"
+fi
 echo "✓ 완료 → $DEST"
 echo "  Safari 확장을 껐다 켜거나 페이지를 새로고침하면 반영됩니다."
