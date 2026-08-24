@@ -24,7 +24,7 @@ if [ -z "$TEAM_ID" ]; then
   exit 1
 fi
 
-echo "▶ 빌드 중… (팀 $TEAM_ID)"
+echo "▶ 빌드 중… 몇 분 걸릴 수 있어요. 멈춘 게 아니니 그대로 두세요. (팀 $TEAM_ID)"
 # 성공하면 조용히, 실패하면 로그를 보여준다 (xcodebuild 는 무해한 경고를 많이 낸다)
 BUILD_LOG="$(mktemp -t czse-build)"
 trap 'rm -f "$BUILD_LOG"' EXIT
@@ -69,7 +69,7 @@ SIGN_AUTH="$(codesign -dvvv "$DEST" 2>&1 | grep -m1 "^Authority=" || true)"
 if [ -z "$SIGN_AUTH" ]; then
   echo "⚠ 서명 정보를 읽지 못했습니다. Xcode 서명 설정을 확인하세요." >&2
 elif echo "$SIGN_AUTH" | grep -q "Apple Development"; then
-  echo "  서명 ✓ ${SIGN_AUTH#Authority=}"
+  echo "  서명 ✓ (Apple 개발 인증서)"
 else
   echo "⚠ 개발 인증서로 서명되지 않았습니다 (${SIGN_AUTH#Authority=}). Xcode 서명 설정을 확인하세요." >&2
 fi

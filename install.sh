@@ -18,6 +18,11 @@ die() {
   exit 1
 }
 
+# ── 안내 ────────────────────────────────────────────────────
+printf '\n\033[1mCHZZK Extension 설치\033[0m\n'
+printf '치지직용 Safari 확장을 이 맥에서 빌드해 설치합니다.\n'
+printf '처음이면 몇 분 걸립니다. 끝나면 Safari 에서 켜는 법을 알려드립니다.\n\n'
+
 # ── 1. 사전 조건 ────────────────────────────────────────────
 [ "$(uname -s)" = "Darwin" ] || die "macOS 에서만 설치할 수 있습니다."
 
@@ -57,7 +62,7 @@ if [ -n "$XCODE_MAJOR" ] && [ "$XCODE_MAJOR" -lt 16 ] 2>/dev/null; then
     "App Store 에서 Xcode 를 최신 버전으로 업데이트한 뒤 다시 실행하세요."
 fi
 
-say "Apple ID 팀 감지…"
+say "Apple ID 확인…"
 # 개발 인증서 subject 의 OU 가 팀 ID. Xcode 에 Apple ID 를 추가하면 자동 발급된다.
 TEAM_ID="$(security find-certificate -a -c "Apple Development" -p 2>/dev/null |
   openssl x509 -noout -subject 2>/dev/null |
@@ -71,7 +76,6 @@ if [ -z "$TEAM_ID" ]; then
     "" \
     "추가한 뒤 이 명령을 다시 실행하세요."
 fi
-say "  팀 ID: $TEAM_ID"
 
 # ── 2. 소스 준비 ────────────────────────────────────────────
 # 저장소 안에서 실행했으면 그대로 쓰고, 아니면 받아온다.
@@ -100,7 +104,7 @@ cat <<'EOF'
 마지막 한 단계만 남았습니다.
 
   1. Safari → 설정(⌘,) → "확장 프로그램" 탭
-  2. "Chzzk Safari Extension" 체크
+  2. "CHZZK Extension" 체크
   3. 권한을 물으면 "chzzk.naver.com 에서 항상 허용"
 
 방금 열린 앱 창의 버튼으로 바로 이동할 수도 있습니다.
