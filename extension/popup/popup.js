@@ -40,7 +40,10 @@ const checkUpdate = async () => {
   let latest = null;
 
   try {
-    const res = await fetch(MANIFEST_URL, { cache: "no-store" });
+    // 쿼리로 캐시를 우회한다. Safari 는 raw.githubusercontent.com 을 5분 캐시하는데
+    // cache: "no-store" 로는 CDN 캐시를 못 뚫어, 방금 올린 버전을 한참 못 보게 된다.
+    // raw 는 쿼리스트링을 무시하고 같은 파일을 주지만 캐시 키는 URL 단위라 매번 새로 받는다.
+    const res = await fetch(`${MANIFEST_URL}?t=${Date.now()}`, { cache: "no-store" });
     if (!res.ok) return;
     latest = (await res.json()).version;
   } catch {
