@@ -58,11 +58,23 @@ body {
 
 /* ── 업데이트 알림 ─────────────────────────────────────── */
 .update {
+  display: block;
   padding: 9px 16px;
   background: rgba(255, 198, 60, 0.09);
   border-bottom: 1px solid var(--line);
   color: var(--cheese);
   font-size: 12px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.update[hidden] {
+  display: none;
+}
+
+.update:hover {
+  background: rgba(255, 198, 60, 0.16);
+  text-decoration: underline;
 }
 
 .update span {

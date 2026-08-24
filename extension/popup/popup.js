@@ -5,17 +5,18 @@ const api = globalThis.browser ?? globalThis.chrome;
 const MANIFEST_URL =
   "https://raw.githubusercontent.com/zxc88kr/chzzk-safari-extension/main/extension/manifest.json";
 
-// 저장 실패 등 문제를 팝업 하단에 표시
+// 문제가 생기면 팝업 맨 위에 표시한다.
+// (아래에 붙이면 설정 목록이 길어 화면 밖으로 밀려 아무도 못 본다)
 const showError = (message) => {
   let box = document.getElementById("czse-error");
   if (!box) {
     box = document.createElement("div");
     box.id = "czse-error";
     box.style.cssText =
-      "margin:8px 16px 12px;padding:8px 10px;border-radius:8px;" +
+      "margin:8px 16px;padding:8px 10px;border-radius:8px;" +
       "background:rgba(255,80,80,0.12);color:#ff8080;font-size:11px;" +
       "line-height:1.4;word-break:break-all;";
-    document.body.appendChild(box);
+    document.body.prepend(box);
   }
   box.textContent = message;
 };
@@ -52,7 +53,7 @@ const checkUpdate = async () => {
   document.getElementById("update").hidden = false;
 };
 
-document.addEventListener("DOMContentLoaded", async () => {
+const initSettings = async () => {
   try {
     if (typeof CZSE_DEFAULTS === "undefined") {
       showError("defaults.js 로드 실패");
@@ -106,8 +107,14 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     }
 
-    checkUpdate();
   } catch (err) {
     showError(`초기화 실패: ${err?.message ?? err}`);
   }
+};
+
+// 둘을 따로 실행한다. 한쪽이 실패해도 다른 쪽은 영향을 받지 않는다
+// (업데이트 확인이 설정 초기화 뒤에 붙어 있어 통째로 건너뛰던 문제가 있었다)
+document.addEventListener("DOMContentLoaded", () => {
+  initSettings();
+  checkUpdate();
 });

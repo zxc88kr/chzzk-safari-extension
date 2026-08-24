@@ -1,7 +1,7 @@
 <p align="center">
   <img src="./extension/icons/icon-128.png" width="88" alt="로고" />
 </p>
-<h1 align="center">Chzzk Safari Extension</h1>
+<h1 align="center">CHZZK Tools</h1>
 <p align="center">치지직 시청 편의 기능을 담은 개인용 Safari 확장</p>
 <p align="center">
   <img src="https://img.shields.io/github/v/tag/zxc88kr/chzzk-safari-extension?style=flat-square&label=version&color=00FFA3" alt="Version" />
@@ -77,7 +77,7 @@ curl -fsSL https://raw.githubusercontent.com/zxc88kr/chzzk-safari-extension/main
 
 설치가 끝나면 앱 창이 하나 뜨고(영문입니다), 이어서 **Safari 확장 설정이 자동으로 열립니다.** 거기서
 
-1. **Chzzk Safari Extension** 체크
+1. **CHZZK Tools** 체크
 2. 권한을 물으면 **chzzk.naver.com 에서 항상 허용** 선택
 
 하면 끝입니다. 이후 주소창 옆 확장 아이콘을 누르면 기능을 하나씩 켜고 끌 수 있습니다.
@@ -120,7 +120,7 @@ sudo xcodebuild -license accept
 <br>
 
 1. Safari → 설정…(`⌘,`) → 확장 프로그램에서 체크 해제
-2. `~/Applications` 의 **Chzzk Safari Extension** 을 휴지통으로
+2. `~/Applications` 의 **Chzzk Safari Extension.app** 을 휴지통으로
 3. 내려받은 소스까지 지우려면 터미널에 `rm -rf ~/.chzzk-safari-extension`
 
 </details>
