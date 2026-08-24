@@ -10,7 +10,7 @@ body:
       label: 어떤 문제인가요?
       description: 어느 기능이, 어느 화면에서, 어떻게 안 되는지 적어주세요.
       placeholder: |
-        라이브에 들어가도 자동 넓은 화면이 안 됨
+        라이브에 들어가도 자동 넓은 화면이 안 된다
     validations:
       required: true
 

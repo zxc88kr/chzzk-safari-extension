@@ -18,7 +18,7 @@ body:
     attributes:
       label: 어떤 점이 불편한가요?
       description: 기능보다, 지금 무엇이 번거로운지 적어주세요. 더 나은 방법을 찾기 쉽습니다.
-      placeholder: 방송 기다릴 때 새로고침을 계속 눌러야 함
+      placeholder: 방송 기다릴 때 새로고침을 계속 눌러야 한다
     validations:
       required: true
 
@@ -27,4 +27,4 @@ body:
     attributes:
       label: 생각하신 방법이 있다면
       description: 없어도 괜찮습니다. 떠오르는 방식이 있으면 적어주세요.
-      placeholder: 방송이 시작되면 알림이 왔으면
+      placeholder: 방송이 시작되면 알림이 오면 좋겠다

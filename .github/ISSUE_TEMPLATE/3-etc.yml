@@ -8,6 +8,6 @@ body:
     attributes:
       label: 내용
       description: 버그·기능이 아닌 무엇이든 자유롭게 적어주세요.
-      placeholder: 사용법이 궁금하거나 문서에 이상한 부분을 발견
+      placeholder: 사용법이 궁금하거나 문서에서 이상한 부분을 발견했다
     validations:
       required: true
