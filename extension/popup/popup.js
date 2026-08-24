@@ -5,7 +5,9 @@ const api = globalThis.browser ?? globalThis.chrome;
 const MANIFEST_URL =
   "https://raw.githubusercontent.com/zxc88kr/chzzk-safari-extension/main/extension/manifest.json";
 const CHECK_KEY = "czseUpdateCheck";
-const CHECK_INTERVAL = 6 * 60 * 60 * 1000;
+// 팝업은 자주 열지 않으니 조회 비용이 작다. 간격이 길면 새 버전이 나와도
+// 한참 뒤에야 알려주게 되므로 짧게 둔다.
+const CHECK_INTERVAL = 30 * 60 * 1000;
 
 // 저장 실패 등 문제를 팝업 하단에 표시
 const showError = (message) => {
