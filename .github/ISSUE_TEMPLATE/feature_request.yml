@@ -3,11 +3,20 @@ description: 있었으면 하는 기능
 labels: [enhancement]
 assignees: [zxc88kr]
 body:
+  - type: markdown
+    attributes:
+      value: |
+        아래는 시도해보고 접은, **기술적으로 불가능한 것들**입니다.
+
+        - **광고 스킵** — 치지직이 광고 차단을 감지해 팝업으로 막습니다.
+        - **클립 만들기** — 치지직이 Safari를 코드 레벨에서 차단합니다.
+        - **구독 이모티콘 단축어** — 이모티콘이 입력창이 아닌 별도 영역에서 관리돼 재현이 안 됩니다.
+
   - type: textarea
     id: problem
     attributes:
       label: 어떤 점이 불편한가요?
-      description: 기능 자체보다, 지금 무엇이 번거로운지를 적어주시면 더 나은 방법을 찾기 쉽습니다.
+      description: 기능 자체보다, 지금 무엇이 번거로운지 적어주시면 더 나은 방법을 찾기 쉽습니다.
       placeholder: 방송 기다릴 때 계속 새로고침을 눌러야 한다
     validations:
       required: true
@@ -17,12 +26,3 @@ body:
     attributes:
       label: 생각하신 방법이 있다면
       placeholder: 방송이 시작되면 알림이 오면 좋겠다
-
-  - type: markdown
-    attributes:
-      value: |
-        참고로 아래는 **기술적으로 불가능한 것들**입니다. (시도해보고 접었습니다)
-
-        - **광고 스킵** — 치지직이 광고 차단을 감지해 팝업으로 막습니다.
-        - **클립 만들기** — 치지직이 Safari를 코드 레벨에서 차단합니다.
-        - **구독 이모티콘 단축어** — 이모티콘이 입력창이 아닌 별도 영역에서 관리돼 재현이 안 됩니다.
