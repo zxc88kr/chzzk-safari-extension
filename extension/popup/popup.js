@@ -4,10 +4,6 @@ const api = globalThis.browser ?? globalThis.chrome;
 
 const MANIFEST_URL =
   "https://raw.githubusercontent.com/zxc88kr/chzzk-safari-extension/main/extension/manifest.json";
-const CHECK_KEY = "czseUpdateCheck";
-// 팝업은 자주 열지 않으니 조회 비용이 작다. 간격이 길면 새 버전이 나와도
-// 한참 뒤에야 알려주게 되므로 짧게 둔다.
-const CHECK_INTERVAL = 30 * 60 * 1000;
 
 // 저장 실패 등 문제를 팝업 하단에 표시
 const showError = (message) => {
@@ -35,23 +31,19 @@ const compareVersions = (a, b) => {
   return 0;
 };
 
-// 새 버전이 있으면 알림 띄우기. 결과는 캐시해 자주 조회하지 않는다.
+// 새 버전이 있으면 알림 띄우기.
+// 팝업은 자주 열지 않아 매번 조회해도 부담이 없다. 캐시를 두면 새 버전이 나와도
+// 한참 뒤에야 알려주게 돼(실제로 그래서 알림이 안 뜨는 혼란이 있었다) 두지 않는다.
 const checkUpdate = async () => {
   const current = api.runtime.getManifest().version;
   let latest = null;
 
   try {
-    const cached = (await api.storage.local.get(CHECK_KEY))[CHECK_KEY];
-    if (cached && Date.now() - cached.at < CHECK_INTERVAL) {
-      latest = cached.version;
-    } else {
-      const res = await fetch(MANIFEST_URL, { cache: "no-store" });
-      if (!res.ok) return;
-      latest = (await res.json()).version;
-      await api.storage.local.set({ [CHECK_KEY]: { version: latest, at: Date.now() } });
-    }
+    const res = await fetch(MANIFEST_URL, { cache: "no-store" });
+    if (!res.ok) return;
+    latest = (await res.json()).version;
   } catch {
-    return; // 네트워크·권한 문제면 조용히 넘어간다
+    return; // 네트워크 문제면 조용히 넘어간다
   }
 
   if (!latest || compareVersions(latest, current) <= 0) return;
