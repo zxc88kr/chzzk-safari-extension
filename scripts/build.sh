@@ -24,7 +24,7 @@ if [ -z "$TEAM_ID" ]; then
   exit 1
 fi
 
-echo "▶ 빌드 중… 몇 분 걸릴 수 있어요. 멈춘 게 아니니 그대로 두세요. (팀 $TEAM_ID)"
+echo "▶ 빌드 중… 몇 분 걸릴 수 있어요. 멈춘 게 아니니 그대로 두세요."
 # 성공하면 조용히, 실패하면 로그를 보여준다 (xcodebuild 는 무해한 경고를 많이 낸다)
 BUILD_LOG="$(mktemp -t czse-build)"
 trap 'rm -f "$BUILD_LOG"' EXIT
