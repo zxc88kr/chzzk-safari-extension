@@ -103,13 +103,11 @@ cat <<'EOF'
 
   ✓ 설치 완료  (~/Applications)
 
-이제 Safari 에서 켜기만 하면 됩니다.
-방금 열린 Safari 확장 설정 창에서
+Safari 확장 설정에서 "Chzzk Safari Extension" 을 켜면 끝입니다.
+(설치 직후에는 설정 창이 자동으로 열립니다)
 
-  1. "Chzzk Safari Extension" 체크
-  2. 권한을 물으면 "chzzk.naver.com 에서 항상 허용"
-
-창이 안 보이면  Safari → 설정(⌘,) → 확장 프로그램  에서 직접 켜세요.
-기능은 주소창 옆 확장 아이콘에서 켜고 끌 수 있습니다.
+  · 창이 없으면  Safari → 설정(⌘,) → 확장 프로그램  에서 켜기
+  · 처음 켤 때 권한을 물으면  "chzzk.naver.com 에서 항상 허용"
+  · 기능은 주소창 옆 확장 아이콘에서 켜고 끌 수 있어요
 
 EOF
