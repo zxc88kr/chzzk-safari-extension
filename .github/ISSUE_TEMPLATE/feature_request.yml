@@ -1,7 +1,7 @@
 name: 기능 제안
 description: 있었으면 하는 기능
 title: "[제안] "
-labels: [enhancement]
+labels: [기능]
 assignees: [zxc88kr]
 body:
   - type: markdown
