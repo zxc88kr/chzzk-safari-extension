@@ -1,5 +1,5 @@
 name: 버그 제보
-description: 안 되는 기능, 깨진 화면
+description: 안 되는 기능 · 깨진 화면 · 오작동
 title: "[버그] "
 labels: [버그]
 assignees: [zxc88kr]
