@@ -64,10 +64,10 @@ const checkUpdate = async () => {
   banner.addEventListener("click", async () => {
     try {
       await navigator.clipboard.writeText(INSTALL_CMD);
-      label.textContent = "명령 복사됨 · 터미널에 붙여넣기 (⌘V)";
+      label.textContent = "명령 복사됨 · 터미널에 붙여넣고 실행 (⌘V)";
       banner.classList.add("copied");
     } catch {
-      label.textContent = "복사 실패 · 아래 명령을 직접 실행하세요";
+      label.textContent = "복사 실패 · README 의 업데이트 명령을 실행하세요";
     }
   });
 };
