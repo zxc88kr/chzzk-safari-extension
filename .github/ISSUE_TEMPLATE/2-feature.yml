@@ -17,7 +17,7 @@ body:
     id: problem
     attributes:
       label: 어떤 점이 불편한가요?
-      description: 기능 자체보다, 지금 무엇이 번거로운지 적어주시면 더 나은 방법을 찾기 쉽습니다.
+      description: 기능보다, 지금 무엇이 번거로운지 적어주세요. 더 나은 방법을 찾기 쉽습니다.
       placeholder: 방송 기다릴 때 계속 새로고침을 눌러야 한다
     validations:
       required: true
