@@ -1,5 +1,6 @@
 name: 버그 제보
 description: 기능이 안 되거나 화면이 깨질 때
+title: "[버그] "
 labels: [bug]
 assignees: [zxc88kr]
 body:
