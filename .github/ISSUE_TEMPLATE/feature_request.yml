@@ -25,4 +25,5 @@ body:
     id: idea
     attributes:
       label: 생각하신 방법이 있다면
+      description: 없어도 괜찮습니다. 떠오르는 방식이 있으면 적어주세요.
       placeholder: 방송이 시작되면 알림이 오면 좋겠다
