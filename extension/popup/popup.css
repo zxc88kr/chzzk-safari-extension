@@ -121,6 +121,12 @@ section + section {
   cursor: pointer;
 }
 
+/* 토글 행은 설명 유무와 상관없이 같은 높이 — 설명 없는 행이 촘촘해 보이지 않게.
+   슬라이더 행(.range-row)은 세로 구조라 제외한다. */
+.row:not(.range-row) {
+  min-height: 44px;
+}
+
 .text {
   display: flex;
   flex-direction: column;
