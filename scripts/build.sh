@@ -80,5 +80,10 @@ if [ "${CZSE_OPEN_PREFS:-0}" = "1" ]; then
 else
   open "$DEST"
 fi
-echo "✓ 완료 → $DEST"
-echo "  Safari 확장을 껐다 켜거나 페이지를 새로고침하면 반영됩니다."
+
+# install.sh 가 호출한 경우(CZSE_QUIET=1)엔 완료·안내를 install.sh 가 전담한다.
+# 직접 실행(개발용)일 때만 여기서 마무리를 찍는다.
+if [ "${CZSE_QUIET:-0}" != "1" ]; then
+  echo "✓ 완료 → $DEST"
+  echo "  Safari 확장을 껐다 켜거나 페이지를 새로고침하면 반영됩니다."
+fi

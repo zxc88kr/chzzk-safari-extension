@@ -19,9 +19,8 @@ die() {
 }
 
 # ── 안내 ────────────────────────────────────────────────────
-printf '\n\033[1mCHZZK Extension 설치\033[0m\n'
-printf '치지직용 Safari 확장을 이 맥에서 빌드해 설치합니다.\n'
-printf '처음이면 몇 분 걸립니다. 끝나면 Safari 에서 켜는 법을 알려드립니다.\n\n'
+printf '\n\033[1mChzzk Safari Extension 설치\033[0m\n'
+printf '치지직 시청 편의 확장을 이 맥에서 빌드해 설치합니다.\n\n'
 
 # ── 1. 사전 조건 ────────────────────────────────────────────
 [ "$(uname -s)" = "Darwin" ] || die "macOS 에서만 설치할 수 있습니다."
@@ -93,22 +92,21 @@ else
 fi
 
 # ── 3. 빌드 + 설치 ──────────────────────────────────────────
-CZSE_TEAM_ID="$TEAM_ID" CZSE_OPEN_PREFS=1 bash "$SRC_DIR/scripts/build.sh"
+# 완료·안내는 아래에서 전담하므로 build.sh 는 조용히 실행한다.
+CZSE_TEAM_ID="$TEAM_ID" CZSE_OPEN_PREFS=1 CZSE_QUIET=1 bash "$SRC_DIR/scripts/build.sh"
 
 # ── 4. 마무리 안내 ──────────────────────────────────────────
 cat <<'EOF'
 
-──────────────────────────────────────────────
-설치 완료!  (위치: ~/Applications)
+  ✓ 설치 완료  (~/Applications)
 
-마지막 한 단계만 남았습니다.
+이제 Safari 에서 켜기만 하면 됩니다.
+방금 열린 Safari 확장 설정 창에서
 
-  1. Safari → 설정(⌘,) → "확장 프로그램" 탭
-  2. "CHZZK Extension" 체크
-  3. 권한을 물으면 "chzzk.naver.com 에서 항상 허용"
+  1. "Chzzk Safari Extension" 체크
+  2. 권한을 물으면 "chzzk.naver.com 에서 항상 허용"
 
-방금 열린 앱 창의 버튼으로 바로 이동할 수도 있습니다.
+창이 안 보이면  Safari → 설정(⌘,) → 확장 프로그램  에서 직접 켜세요.
+기능은 주소창 옆 확장 아이콘에서 켜고 끌 수 있습니다.
 
-기능은 주소창 옆 확장 아이콘을 눌러 하나씩 켜고 끌 수 있습니다.
-──────────────────────────────────────────────
 EOF
