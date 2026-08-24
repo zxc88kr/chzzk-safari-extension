@@ -141,7 +141,10 @@
       log("CORS 캡처 실패:", err?.name ?? err);
       return false;
     } finally {
-      video.src = "";
+      // src = "" 는 현재 문서 URL 로 해석돼 미디어 로드를 다시 태운다. removeAttribute 로 해제.
+      video.pause();
+      video.removeAttribute("src");
+      video.load();
       video.remove();
     }
   };

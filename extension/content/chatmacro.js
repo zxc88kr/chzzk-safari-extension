@@ -58,8 +58,11 @@
   let button = null;
   let panel = null;
   let toast = null;
+  let toastTimer = null;
 
   const showToast = (text) => {
+    // 이전 타이머를 끄지 않으면, 먼저 걸린 콜백이 새로 띄운 토스트를 지워버린다
+    clearTimeout(toastTimer);
     toast?.remove();
     toast = document.createElement("div");
     toast.className = "czse-macro-toast";
@@ -70,7 +73,7 @@
       toast.style.left = `${Math.round(rect.left + rect.width / 2)}px`;
       toast.style.top = `${Math.round(rect.top - 36)}px`;
     }
-    setTimeout(() => {
+    toastTimer = setTimeout(() => {
       toast?.remove();
       toast = null;
     }, 2500);

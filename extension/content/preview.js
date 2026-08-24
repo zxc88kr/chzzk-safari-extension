@@ -21,6 +21,13 @@
   const removeCard = () => {
     if (timer) clearTimeout(timer);
     timer = null;
+    // DOM 에서 떼는 것만으로는 버퍼·디코더가 GC 전까지 남는다. 명시적으로 해제한다.
+    const video = card?.querySelector("video");
+    if (video) {
+      video.pause();
+      video.removeAttribute("src");
+      video.load();
+    }
     card?.remove();
     card = null;
     hoverAnchor = null;
