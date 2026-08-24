@@ -1,85 +1,29 @@
 name: 버그 제보
-description: 기능이 동작하지 않거나 화면이 깨질 때
+description: 기능이 안 되거나 화면이 깨질 때
 labels: [bug]
 body:
-  - type: markdown
-    attributes:
-      value: |
-        치지직이 사이트를 개편하면 확장이 화면 요소를 못 찾아 조용히 멈추는 경우가 많습니다.
-        아래 정보를 주시면 원인을 훨씬 빨리 찾을 수 있습니다.
-
-  - type: dropdown
-    id: feature
-    attributes:
-      label: 어떤 기능인가요?
-      options:
-        - 지연시간 표시 / 따라잡기
-        - 방향키 탐색
-        - 자동 넓은 화면
-        - 자동 음소거 해제
-        - 통나무 자동 획득
-        - PIP / 화면 캡처 버튼
-        - 채팅 타임스탬프
-        - 자주 쓰는 문구
-        - 호버 미리보기
-        - 사이드바 자동 갱신
-        - 방송 시작 자동 새로고침
-        - 채널 채팅 탭
-        - 화면 정리 (숨기기 계열)
-        - 설치 / 빌드
-        - 기타
-    validations:
-      required: true
-
   - type: textarea
-    id: what-happened
+    id: what
     attributes:
-      label: 무슨 일이 일어났나요?
-      description: 기대한 동작과 실제 동작을 적어주세요.
+      label: 어떤 문제인가요?
+      description: 어느 기능이, 어느 화면에서, 어떻게 안 되는지 적어주세요.
       placeholder: |
-        기대: 라이브에 들어가면 자동으로 넓은 화면이 된다
-        실제: 아무 변화가 없다
+        라이브에 들어가도 자동 넓은 화면이 안 됩니다.
     validations:
       required: true
-
-  - type: textarea
-    id: steps
-    attributes:
-      label: 재현 방법
-      placeholder: |
-        1. 치지직에서 아무 라이브나 연다
-        2. 확장 팝업에서 '자동 넓은 화면'이 켜져 있는지 확인한다
-        3. 페이지를 새로고침한다
-    validations:
-      required: true
-
-  - type: input
-    id: page
-    attributes:
-      label: 어느 화면인가요?
-      description: 라이브 / 채널 홈 / 다시보기 / 홈 등. 특정 채널에서만 생긴다면 주소를 적어주세요.
-      placeholder: 라이브 페이지
 
   - type: input
     id: versions
     attributes:
       label: 버전
-      description: |
-        확장 버전은 팝업 오른쪽 위에 있습니다. macOS·Safari 버전도 함께 적어주세요.
-      placeholder: 확장 1.15.0 / macOS 15.2 / Safari 18.2
+      description: 확장 버전은 팝업 오른쪽 위에 있습니다.
+      placeholder: 확장 1.40.0 / macOS 15.2 / Safari 18.2
     validations:
       required: true
 
   - type: textarea
-    id: console
-    attributes:
-      label: 콘솔 오류 (선택)
-      description: |
-        치지직 페이지에서 우클릭 → 요소 점검 → 콘솔 탭에 빨간 오류가 있으면 붙여주세요.
-        `개발자용 기능 보기`가 꺼져 있으면 이 항목은 건너뛰셔도 됩니다.
-      render: text
-
-  - type: textarea
     id: extra
     attributes:
-      label: 스크린샷이나 덧붙일 말 (선택)
+      label: 스크린샷·콘솔 오류 (선택)
+      description: |
+        치지직 페이지에서 `⌥⌘C` 로 콘솔을 열어 빨간 오류가 있으면 함께 붙여주세요.
