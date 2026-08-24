@@ -49,9 +49,10 @@ html.czse-ts-off .czse-ts {
   display: none;
 }
 
-/* 채팅창 후원·통나무 랭킹 숨김.
-   :has(> …) 로 직계 자식만 보게 해서, 큰 컨테이너가 통째로 사라지지 않게 한다. */
-html.czse-hide-ranking #aside-chatting [class*="_container_"]:has(> [class*="_ranking_"]),
+/* 채팅창 랭킹 숨김 (라이브·주간 후원·통나무).
+   바깥 컨테이너 특정은 flags.js 가 맡는다 — 랭킹 요소가 손자라 CSS 로는 안전하게 잡기 어렵다.
+   아래 두 줄은 구조가 단순한 경우를 위한 보조 규칙. */
+html.czse-hide-ranking [data-czse-ranking="1"],
 html.czse-hide-ranking #aside-chatting [class*="_ranking_container_"],
 html.czse-hide-ranking [class*="live_chatting_ranking_container__"] {
   display: none !important;

@@ -62,8 +62,32 @@
     }
   };
 
+  // 채팅창 랭킹(라이브·주간 후원·통나무) 블록을 태깅한다.
+  // CSS 만으로는 잡기 어렵다 — 랭킹 요소가 컨테이너의 손자라 :has(> …) 로는 안 걸리고,
+  // > 를 빼면 채팅창 전체가 매칭돼 통째로 사라진다. 그래서 JS 로 바깥 컨테이너를 특정한다.
+  const tagRankingBlocks = () => {
+    const aside = czse.util.chatAside();
+    if (!aside) return;
+
+    for (const el of aside.querySelectorAll('[class*="_ranking_"]')) {
+      if (el.closest("[data-czse-ranking]")) continue; // 이미 처리된 블록 안
+
+      // 채팅 영역 바로 아래까지 올라가며 가장 바깥 컨테이너를 찾는다
+      let container = el;
+      for (let node = el; node && node !== aside; node = node.parentElement) {
+        if (/_container_/.test(node.className ?? "")) container = node;
+      }
+
+      // 채팅 로그나 입력창까지 품었다면 너무 큰 것을 잡은 것 — 건드리지 않는다
+      if (container.querySelector('[role="log"], [contenteditable="true"]')) continue;
+
+      container.setAttribute("data-czse-ranking", "1");
+    }
+  };
+
   czse.util.poll(() => {
     tagSidebarSections();
     if (czse.settings.hidePromo) tagPromoBanners();
+    if (czse.settings.hideRanking) tagRankingBlocks();
   }, 2000);
 })();
