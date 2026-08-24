@@ -32,8 +32,9 @@
 
 **탐색**
 
-- **방송 미리보기** — 마우스를 올리면 방송 화면을 띄움 (크기·지연·볼륨 조절)
-- **사이드바 자동 갱신** — 30초마다 팔로잉 목록 새로고침
+- **방송 미리보기** — 마우스를 올리면 방송 화면을 띄움, 우클릭으로 음소거 전환 (크기·지연·볼륨 조절)
+- **사이드바 자동 갱신** — 팔로잉 채널의 라이브 상태를 30초마다 갱신
+- **팔로잉 자동 펼치기** — 사이드바 팔로잉 목록을 진입할 때 모두 펼침
 - **방송 시작 자동 입장** — 기다리던 방송이 시작되면 바로 입장
 - **채널 채팅 탭** — 오프라인 채널에서도 채팅 보기
 
@@ -128,48 +129,11 @@ sudo xcodebuild -license accept
 
 </details>
 
-<details>
-<summary>수동으로 빌드하기 / 개발용</summary>
-
-<br>
-
-저장소를 받은 뒤 빌드 스크립트를 실행합니다. 팀 ID는 키체인의 개발 인증서에서 자동으로 찾습니다.
-
-```sh
-git clone https://github.com/zxc88kr/chzzk-safari-extension.git
-cd chzzk-safari-extension
-./scripts/build.sh
-```
-
-Xcode에서 직접 열려면 `app/Chzzk Safari Extension/Chzzk Safari Extension.xcodeproj` 를 열고 Signing & Capabilities에서 본인 팀을 고른 뒤 ⌘R 하면 됩니다.
-
-**서명 없이 임시로 불러오기** — 코드를 자주 고칠 때 빠릅니다.
-
-1. Safari → 설정 → 고급에서 "웹 개발자용 기능 보기" 켜기
-2. 개발자 탭에서 "허용되지 않은 확장 프로그램 허용" 켜기
-3. "임시 확장 프로그램 추가..."로 `extension/` 폴더 선택
-4. 소스를 고친 뒤에는 확장 "다시 로드" + 페이지 새로고침
-
-임시로 불러온 확장은 다시 로드할 때마다 저장 데이터가 초기화됩니다.
-
-</details>
-
-## 구조
-
-```
-extension/   웹 확장 소스 (manifest v3, content scripts, popup)
-app/         safari-web-extension-converter 로 만든 Xcode 래퍼
-```
-
-치지직은 빌드마다 바뀌는 css-module 해시 클래스를 쓰기 때문에, 클래스명을 직접 박지 않고 텍스트·구조 기반 태깅과 `data-czse-*` 속성으로 DOM을 다룹니다. 사이드바 갱신은 팔로잉 라이브 API를 직접 폴링합니다.
-
 ## 권한과 데이터
 
 확장이 요구하는 권한은 **chzzk.naver.com 하나뿐**입니다. 화면 요소를 바꾸고 방송 정보·통나무 API를 호출하는 데 씁니다.
 
 설정과 저장한 문구는 **맥 안에만** 보관되며 어디에도 전송하지 않습니다. 수집·추적·광고 코드가 없습니다.
-
-한 가지 알아두실 점은, 팝업을 열 때마다 새 버전이 나왔는지 확인하려고 이 저장소의 `manifest.json` 파일 하나를 읽는다는 것입니다. 이 과정에서 GitHub에 접속 기록(IP)이 남습니다.
 
 ## Credits
 
