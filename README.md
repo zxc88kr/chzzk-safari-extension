@@ -42,6 +42,14 @@
 - **정적 로고** — 좌상단 로고 움직임 끄기
 - **숨기기** — 차단 방송, 오프라인 채널, 사이드바 추천·파트너 / 인기 카테고리 / 방송 일정, 치즈팜 광고
 
+## 업데이트
+
+이미 설치한 경우, 터미널에 같은 명령을 다시 실행하면 최신 버전으로 바뀝니다. (Xcode·설정은 그대로라 다시 할 필요 없습니다)
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/zxc88kr/chzzk-safari-extension/main/install.sh | bash
+```
+
 ## 설치
 
 **준비물** — macOS 14.5 이상, 그리고 Xcode 16 이상
@@ -106,8 +114,6 @@ sudo xcodebuild -license accept
 **"✗ 빌드 실패"** — Xcode를 한 번 실행해 추가 구성요소 설치까지 끝냈는지 확인하고, Safari를 완전히 종료(`⌘Q`)한 뒤 명령을 다시 실행해보세요. 그래도 안 되면 화면에 찍힌 `(전체 로그: …)` 경로를 `open` 명령으로 열어 내용을 [이슈](https://github.com/zxc88kr/chzzk-safari-extension/issues)에 첨부해 주세요.
 
 **Safari 확장 목록에 안 보임** — Safari를 완전히 종료(`⌘Q`)했다가 다시 켜보세요.
-
-**업데이트하려면** — 같은 설치 명령을 다시 실행하면 최신 버전으로 갱신됩니다. 새 버전이 나오면 확장 팝업 위쪽에 알림이 뜹니다.
 
 </details>
 
