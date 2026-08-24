@@ -39,25 +39,40 @@
 - **정적 로고** — 좌상단 로고 움직임 끄기
 - **숨기기** — 차단 방송, 오프라인 채널, 사이드바 추천·파트너 / 인기 카테고리 / 방송 일정, 치즈팜 광고
 
-## 직접 빌드하기
+## 설치
 
-스토어에 올리지 않은 개인용 확장이라, 쓰려면 직접 빌드해야 합니다.
+터미널에 아래 한 줄을 붙여넣으면 내려받기·빌드·설치까지 자동으로 진행됩니다.
 
 ```sh
-open "app/Chzzk Safari Extension/Chzzk Safari Extension.xcodeproj"
+curl -fsSL https://raw.githubusercontent.com/zxc88kr/chzzk-safari-extension/main/install.sh | bash
 ```
 
-1. Xcode의 Signing & Capabilities에서 본인 Apple ID(Personal Team)를 선택
-2. ⌘R 로 빌드·실행한 뒤 Safari 확장 목록에서 활성화
-3. `chzzk.naver.com` 권한 허용
+끝나면 **Safari → 설정(⌘,) → 확장 프로그램**에서 체크하고 `chzzk.naver.com` 권한을 허용하면 됩니다.
+
+> [!IMPORTANT]
+> **Xcode가 설치돼 있어야 합니다** (App Store, 10GB 이상).
+> Safari 확장은 앱으로 포장해 서명해야만 설치되는데, 무료 Apple ID로 서명하려면 Xcode가 필요합니다.
+> Xcode 설치 후 **Settings(⌘,) → Accounts → `+`** 로 Apple ID를 한 번 추가해 주세요. 유료 등록은 필요 없습니다.
 
 > [!TIP]
-> 자동 음소거 해제 등 일부 기능은 Safari → 설정 → 웹 사이트 → 자동 재생에서 `chzzk.naver.com` 을 "모든 자동 재생 허용"으로 둬야 제대로 동작합니다.
+> 자동 음소거 해제 등 일부 기능은 **Safari → 설정 → 웹 사이트 → 자동 재생**에서 `chzzk.naver.com` 을 "모든 자동 재생 허용"으로 둬야 제대로 동작합니다.
 
 <details>
-<summary>서명 없이 임시로 불러오기 (개발용)</summary>
+<summary>수동으로 빌드하기 / 개발용</summary>
 
 <br>
+
+저장소를 받은 뒤 빌드 스크립트를 실행합니다. 팀 ID는 키체인의 개발 인증서에서 자동으로 찾습니다.
+
+```sh
+git clone https://github.com/zxc88kr/chzzk-safari-extension.git
+cd chzzk-safari-extension
+./scripts/build.sh
+```
+
+Xcode에서 직접 열려면 `app/Chzzk Safari Extension/Chzzk Safari Extension.xcodeproj` 를 열고 Signing & Capabilities에서 본인 팀을 고른 뒤 ⌘R 하면 됩니다.
+
+**서명 없이 임시로 불러오기** — 코드를 자주 고칠 때 빠릅니다.
 
 1. Safari → 설정 → 고급에서 "웹 개발자용 기능 보기" 켜기
 2. 개발자 탭에서 "허용되지 않은 확장 프로그램 허용" 켜기
