@@ -59,13 +59,17 @@ body {
 /* ── 업데이트 알림 ─────────────────────────────────────── */
 .update {
   display: block;
+  width: 100%;
   padding: 9px 16px;
-  background: rgba(255, 198, 60, 0.09);
+  border: none;
   border-bottom: 1px solid var(--line);
+  background: rgba(255, 198, 60, 0.09);
   color: var(--cheese);
+  font: inherit;
   font-size: 12px;
-  text-decoration: none;
+  text-align: left;
   cursor: pointer;
+  transition: background 0.12s ease;
 }
 
 .update[hidden] {
@@ -74,7 +78,11 @@ body {
 
 .update:hover {
   background: rgba(255, 198, 60, 0.16);
-  text-decoration: underline;
+}
+
+.update.copied {
+  color: var(--live);
+  background: rgba(0, 255, 163, 0.1);
 }
 
 .update span {

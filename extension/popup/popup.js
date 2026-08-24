@@ -4,6 +4,8 @@ const api = globalThis.browser ?? globalThis.chrome;
 
 const MANIFEST_URL =
   "https://raw.githubusercontent.com/zxc88kr/chzzk-safari-extension/main/extension/manifest.json";
+const INSTALL_CMD =
+  "curl -fsSL https://raw.githubusercontent.com/zxc88kr/chzzk-safari-extension/main/install.sh | bash";
 
 // 문제가 생기면 팝업 맨 위에 표시한다.
 // (아래에 붙이면 설정 목록이 길어 화면 밖으로 밀려 아무도 못 본다)
@@ -53,7 +55,21 @@ const checkUpdate = async () => {
   if (!latest || compareVersions(latest, current) <= 0) return;
 
   document.getElementById("update-version").textContent = latest;
-  document.getElementById("update").hidden = false;
+  const banner = document.getElementById("update");
+  banner.hidden = false;
+
+  // 클릭하면 설치 명령을 클립보드에 복사한다. 터미널에 명령을 자동 입력하는 것은
+  // 보안상 브라우저가 막아 불가능하므로, 붙여넣기 한 번으로 끝나게 하는 게 최선이다.
+  const label = banner.querySelector(".update-text");
+  banner.addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText(INSTALL_CMD);
+      label.textContent = "명령 복사됨 · 터미널에 붙여넣기 (⌘V)";
+      banner.classList.add("copied");
+    } catch {
+      label.textContent = "복사 실패 · 아래 명령을 직접 실행하세요";
+    }
+  });
 };
 
 const initSettings = async () => {
