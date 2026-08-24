@@ -32,6 +32,7 @@ const CZSE_DEFAULTS = {
   previewWidth: 400, // 미리보기 카드 폭(px)
   previewVolume: 20, // 미리보기 볼륨(%) — 0 이면 음소거
   sidebarRefresh: true, // 사이드바 30초마다 자동 갱신
+  expandFollowing: false, // 사이드바 팔로잉 목록 진입 시 자동 펼침
   channelChatTab: true, // 채널 홈 탭에 "채팅" 탭 추가 (오프라인이어도 채팅 진입)
   autoReload: true, // 오프라인 채널 방송 시작 시 자동 새로고침
 };
