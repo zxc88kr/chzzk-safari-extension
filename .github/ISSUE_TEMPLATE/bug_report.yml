@@ -14,13 +14,19 @@ body:
       required: true
 
   - type: input
-    id: versions
+    id: ext-version
     attributes:
-      label: 버전
-      description: 확장 버전은 팝업 오른쪽 위에 있습니다.
-      placeholder: 확장 1.40.0 / macOS 15.2 / Safari 18.2
+      label: 확장 버전
+      description: 팝업 오른쪽 위에 있습니다.
+      placeholder: 1.40.0
     validations:
       required: true
+
+  - type: input
+    id: os-version
+    attributes:
+      label: macOS · Safari 버전 (선택)
+      placeholder: macOS 15.2 / Safari 18.2
 
   - type: textarea
     id: extra
