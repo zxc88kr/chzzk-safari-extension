@@ -1,6 +1,7 @@
 name: 버그 제보
 description: 기능이 안 되거나 화면이 깨질 때
 labels: [bug]
+assignees: [zxc88kr]
 body:
   - type: textarea
     id: what

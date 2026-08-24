@@ -1,6 +1,7 @@
 name: 기능 제안
 description: 있었으면 하는 기능
 labels: [enhancement]
+assignees: [zxc88kr]
 body:
   - type: textarea
     id: problem
