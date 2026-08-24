@@ -41,21 +41,56 @@
 
 ## 설치
 
-터미널에 아래 한 줄을 붙여넣으면 내려받기·빌드·설치까지 자동으로 진행됩니다.
+**준비물** — macOS 13(Ventura) 이상, 그리고 Xcode
+
+> [!IMPORTANT]
+> App Store에 올리지 않은 개인 확장이라, **각자 자기 맥에서 한 번 빌드**해야 합니다.
+> Safari 확장은 앱으로 포장해 서명해야만 설치되는데, 그 서명에 Xcode가 필요하기 때문입니다.
+> 유료 개발자 등록(연 $99)은 **필요 없습니다.**
+
+### 1단계 — Xcode 준비 (처음 한 번만)
+
+1. **App Store**를 열고 `Xcode`를 검색해 설치합니다. (약 4GB, 시간이 꽤 걸립니다)
+2. 설치되면 **Xcode를 한 번 실행**해 초기 설정을 끝냅니다.
+3. Xcode 메뉴에서 **Xcode → Settings…**(`⌘,`) → **Accounts** 탭 → 왼쪽 아래 **`+`** → **Apple ID** 로 로그인합니다.
+   평소 쓰는 애플 계정이면 됩니다.
+
+### 2단계 — 설치 명령 실행
+
+1. **터미널**을 엽니다. — `⌘` + `Space` 를 누르고 `터미널` 이라고 입력한 뒤 Enter
+2. 아래 줄을 **그대로 복사해 붙여넣고** Enter 를 누릅니다.
 
 ```sh
 curl -fsSL https://raw.githubusercontent.com/zxc88kr/chzzk-safari-extension/main/install.sh | bash
 ```
 
-끝나면 **Safari → 설정(⌘,) → 확장 프로그램**에서 체크하고 `chzzk.naver.com` 권한을 허용하면 됩니다.
+내려받기 → 빌드 → 설치가 자동으로 진행됩니다. 앱은 **홈 폴더의 `응용 프로그램`**(`~/Applications`)에 설치되고, 끝나면 자동으로 실행됩니다.
 
-> [!IMPORTANT]
-> **Xcode가 설치돼 있어야 합니다** (App Store, 약 4GB).
-> Safari 확장은 앱으로 포장해 서명해야만 설치되는데, 무료 Apple ID로 서명하려면 Xcode가 필요합니다.
-> Xcode 설치 후 **Settings(⌘,) → Accounts → `+`** 로 Apple ID를 한 번 추가해 주세요. 유료 등록은 필요 없습니다.
+### 3단계 — Safari에서 켜기
+
+1. **Safari → 설정…**(`⌘,`) → **확장 프로그램** 탭
+2. 목록에서 **Chzzk Safari Extension** 을 체크
+3. 권한을 물으면 **chzzk.naver.com 에서 항상 허용**을 선택
+
+주소창 옆 확장 아이콘을 누르면 기능을 하나씩 켜고 끌 수 있습니다.
 
 > [!TIP]
-> 자동 음소거 해제 등 일부 기능은 **Safari → 설정 → 웹 사이트 → 자동 재생**에서 `chzzk.naver.com` 을 "모든 자동 재생 허용"으로 둬야 제대로 동작합니다.
+> 자동 음소거 해제 기능을 쓰려면 **Safari → 설정 → 웹 사이트 → 자동 재생**에서 `chzzk.naver.com` 을 **"모든 자동 재생 허용"** 으로 바꿔주세요. Safari가 기본적으로 소리 있는 자동 재생을 막기 때문입니다.
+
+<details>
+<summary>설치가 안 될 때</summary>
+
+<br>
+
+**"Xcode 가 필요합니다"** — App Store에서 Xcode를 설치하고, 한 번 실행해 초기 설정까지 끝낸 뒤 다시 시도하세요. 명령어 도구(Command Line Tools)만으로는 안 됩니다.
+
+**"Apple 개발 인증서를 찾을 수 없습니다"** — 1단계 3번(Xcode에 Apple ID 추가)을 건너뛴 경우입니다. 추가 후 다시 실행하세요.
+
+**Safari 확장 목록에 안 보임** — Safari를 완전히 종료(`⌘Q`)했다가 다시 켜보세요.
+
+**업데이트하려면** — 같은 설치 명령을 다시 실행하면 최신 버전으로 갱신됩니다.
+
+</details>
 
 <details>
 <summary>수동으로 빌드하기 / 개발용</summary>

@@ -21,6 +21,12 @@ die() {
 # ── 1. 사전 조건 ────────────────────────────────────────────
 [ "$(uname -s)" = "Darwin" ] || die "macOS 에서만 설치할 수 있습니다."
 
+# macOS 13 (Ventura) 이상 필요 — manifest v3 확장은 Safari 16.4+ 에서만 동작한다
+OS_MAJOR="$(sw_vers -productVersion | cut -d. -f1)"
+if [ "$OS_MAJOR" -lt 13 ] 2>/dev/null; then
+  die "macOS 13 (Ventura) 이상이 필요합니다. (현재 $(sw_vers -productVersion))"
+fi
+
 say "Xcode 확인…"
 # CLT 만 깔린 경우 xcodebuild 는 스텁이라 실패한다 — 실제 실행으로 판별
 if ! xcodebuild -version >/dev/null 2>&1; then
@@ -73,15 +79,16 @@ CZSE_TEAM_ID="$TEAM_ID" bash "$SRC_DIR/scripts/build.sh"
 cat <<'EOF'
 
 ──────────────────────────────────────────────
+설치 완료!  (위치: ~/Applications)
+
 마지막 한 단계만 남았습니다.
 
-방금 열린 앱 창에서 "Quit and Open Safari Extensions Preferences…"
-버튼을 누르거나, 직접 여시려면:
+  1. Safari → 설정(⌘,) → "확장 프로그램" 탭
+  2. "Chzzk Safari Extension" 체크
+  3. 권한을 물으면 "chzzk.naver.com 에서 항상 허용"
 
-  Safari → 설정(⌘,) → 확장 프로그램 탭
-  → "Chzzk Safari Extension" 체크
-  → chzzk.naver.com 권한 "허용"
+방금 열린 앱 창의 버튼으로 바로 이동할 수도 있습니다.
 
-설정은 확장 아이콘(주소창 옆)을 눌러 언제든 바꿀 수 있습니다.
+기능은 주소창 옆 확장 아이콘을 눌러 하나씩 켜고 끌 수 있습니다.
 ──────────────────────────────────────────────
 EOF
