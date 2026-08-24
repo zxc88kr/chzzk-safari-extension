@@ -48,9 +48,13 @@
   });
   observer.observe(document.body, { childList: true, subtree: true });
 
-  // 토글 오프 시 이미 찍힌 타임스탬프는 CSS 로 숨긴다
-  const applyToggle = () =>
-    document.documentElement.classList.toggle("czse-ts-off", !czse.settings.chatTimestamp);
+  // 타임스탬프·시스템 공지 숨김을 각각 html 클래스로 반영 (CSS 가 표시 여부 결정).
+  // 공지 태깅(data-czse-hidden-notice)은 설정과 무관하게 항상 붙이고, 실제 숨김만 토글한다.
+  const applyToggle = () => {
+    const root = document.documentElement.classList;
+    root.toggle("czse-ts-off", !czse.settings.chatTimestamp);
+    root.toggle("czse-hide-notice", czse.settings.hideChatNotice);
+  };
   czse.ready.then(() => {
     applyToggle();
     czse.listeners.add(applyToggle);

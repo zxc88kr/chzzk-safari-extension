@@ -16,6 +16,7 @@ const CZSE_DEFAULTS = {
   chatTimestamp: true, // 채팅 타임스탬프
   chatMacros: true, // 자주 쓰는 문구 버튼
   hideRanking: false, // 채팅창 후원·통나무 랭킹 숨기기
+  hideChatNotice: true, // 입장·필터링 안내 등 채팅 시스템 공지 숨기기
 
   // 화면
   staticLogo: true, // 좌상단 로고 애니메이션을 정적 로고로 교체

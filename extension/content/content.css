@@ -58,8 +58,8 @@ html.czse-hide-ranking [class*="live_chatting_ranking_container__"] {
   display: none !important;
 }
 
-/* 시스템 공지 숨김 (chat.js 가 닉네임 부재 구조로 태깅) */
-[data-czse-hidden-notice] {
+/* 시스템 공지 숨김 (chat.js 가 닉네임 부재 구조로 태깅, 토글은 html 클래스로 제어) */
+html.czse-hide-notice [data-czse-hidden-notice] {
   display: none !important;
 }
 
