@@ -60,7 +60,7 @@ curl -fsSL https://raw.githubusercontent.com/zxc88kr/chzzk-safari-extension/main
 
 ### 1단계 — Xcode 준비 (처음 한 번만)
 
-1. **App Store**를 열고 `Xcode`를 검색해 설치합니다. (약 4GB, 시간이 꽤 걸립니다)
+1. **App Store**를 열고 `Xcode`를 검색해 설치합니다. (다운로드만 7GB 이상, 시간이 꽤 걸립니다)
 2. 설치되면 **Xcode를 한 번 실행**해 초기 설정을 끝냅니다.
 3. Xcode 메뉴에서 **Xcode → Settings…**(`⌘,`) → **Accounts** 탭 → 왼쪽 아래 **`+`** → **Apple ID** 로 로그인합니다.
    평소 쓰는 애플 계정이면 됩니다.

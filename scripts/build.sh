@@ -24,7 +24,7 @@ if [ -z "$TEAM_ID" ]; then
   exit 1
 fi
 
-echo "▶ 빌드 중… 몇 분 걸릴 수 있어요. 멈춘 게 아니니 그대로 두세요."
+echo "▶ 빌드 중… 몇 분 걸릴 수 있습니다. 멈춘 게 아니니 그대로 두세요."
 # 성공하면 조용히, 실패하면 로그를 보여준다 (xcodebuild 는 무해한 경고를 많이 낸다)
 BUILD_LOG="$(mktemp -t czse-build)"
 trap 'rm -f "$BUILD_LOG"' EXIT
@@ -41,7 +41,14 @@ if ! xcodebuild -project "$PROJECT" -scheme "$SCHEME" -configuration Release \
   else
     tail -20 "$BUILD_LOG" | sed 's/^/  /' >&2
   fi
-  echo "  (전체 로그: $BUILD_LOG)" >&2
+  # 로그를 찾기 쉬운 곳으로 복사하고 다음 행동을 안내한다
+  LOG_COPY="$HOME/Desktop/chzzk-build-log.txt"
+  cp "$BUILD_LOG" "$LOG_COPY" 2>/dev/null && SHOWN="$LOG_COPY" || SHOWN="$BUILD_LOG"
+  echo "  전체 로그: $SHOWN" >&2
+  echo "" >&2
+  echo "  자주 나는 원인: 저장 공간 부족, 또는 첫 빌드 때 뜬 서명 승인 창을 놓친 경우." >&2
+  echo "  Safari 를 완전히 종료(⌘Q)하고 다시 시도해도 안 되면, 위 로그를 첨부해 알려주세요." >&2
+  echo "  → https://github.com/zxc88kr/chzzk-safari-extension/issues" >&2
   trap - EXIT # 디버깅용으로 로그 남김
   exit 1
 fi

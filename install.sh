@@ -11,7 +11,7 @@ REPO="https://github.com/zxc88kr/chzzk-safari-extension.git"
 SRC_DIR="${CZSE_SRC_DIR:-$HOME/.chzzk-safari-extension}"
 
 say() { printf '\033[1;32m▶\033[0m %s\n' "$1"; }
-warn() { printf '\033[1;33m!\033[0m %s\n' "$1" >&2; }
+warn() { printf '\033[1;33m⚠\033[0m %s\n' "$1" >&2; }
 die() {
   printf '\033[1;31m✗\033[0m %s\n' "$1" >&2
   [ $# -gt 1 ] && printf '  %s\n' "${@:2}" >&2
@@ -43,7 +43,7 @@ if ! XCODE_VER="$(xcodebuild -version 2>/dev/null | head -1)"; then
   die "Xcode 를 찾지 못했습니다." \
     "(설치돼 있다면 초기 설정이 끝나지 않았거나, 명령어 도구를 보고 있는 상태입니다)" \
     "" \
-    "  1) App Store 에서 'Xcode' 설치 (약 4GB, 시간이 꽤 걸립니다)" \
+    "  1) App Store 에서 'Xcode' 설치 (다운로드만 7GB 이상, 시간이 꽤 걸립니다)" \
     "  2) Xcode 를 한 번 실행해 초기 설정 완료" \
     "  3) Xcode → Settings(⌘,) → Accounts → '+' → Apple ID 로그인" \
     "  4) 이 명령을 다시 실행" \
@@ -73,7 +73,9 @@ if [ -z "$TEAM_ID" ]; then
     "Xcode 에 Apple ID 를 추가하면 무료로 자동 발급됩니다 (유료 등록 불필요):" \
     "  Xcode → Settings(⌘,) → Accounts → '+' → Apple ID 로그인" \
     "" \
-    "추가한 뒤 이 명령을 다시 실행하세요."
+    "추가한 뒤 이 명령을 다시 실행하세요." \
+    "그래도 같은 메시지가 나오면, Xcode 에서 아무 프로젝트나 한 번 실행(⌘R)해" \
+    "서명을 만든 뒤 다시 실행하세요."
 fi
 
 # ── 2. 소스 준비 ────────────────────────────────────────────
@@ -83,12 +85,13 @@ if [ -n "$SELF_DIR" ] && [ -d "$SELF_DIR/app" ] && [ -d "$SELF_DIR/extension" ];
   SRC_DIR="$SELF_DIR"
   say "소스: $SRC_DIR (현재 저장소)"
 elif [ -d "$SRC_DIR/.git" ]; then
-  say "소스 업데이트…"
+  say "소스 업데이트 중…"
   git -C "$SRC_DIR" pull --ff-only --quiet || warn "업데이트 실패 — 기존 소스로 진행합니다."
 else
-  command -v git >/dev/null 2>&1 || die "git 이 필요합니다. 'xcode-select --install' 후 다시 시도하세요."
   say "소스 내려받는 중…"
-  git clone --depth 1 --quiet "$REPO" "$SRC_DIR"
+  # git 은 Xcode 에 동봉돼 위에서 이미 보장된다. 실패는 사실상 네트워크 문제.
+  git clone --depth 1 --quiet "$REPO" "$SRC_DIR" ||
+    die "소스를 내려받지 못했습니다." "인터넷 연결을 확인하고 다시 실행하세요."
 fi
 
 # ── 3. 빌드 + 설치 ──────────────────────────────────────────
