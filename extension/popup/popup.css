@@ -56,54 +56,17 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
-/* ── 업데이트 알림 ───────────────────────────────────────── */
+/* ── 업데이트 알림 ─────────────────────────────────────── */
 .update {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 16px;
+  padding: 9px 16px;
   background: rgba(255, 198, 60, 0.09);
   border-bottom: 1px solid var(--line);
-}
-
-.update-copy {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-}
-
-.update-copy strong {
+  color: var(--cheese);
   font-size: 12px;
-  font-weight: 600;
-  color: var(--cheese);
 }
 
-.update-copy span {
-  font-size: 11px;
-  color: var(--ink-3);
-}
-
-#update-btn {
-  flex-shrink: 0;
-  margin-left: auto;
-  padding: 5px 9px;
-  border: 1px solid rgba(255, 198, 60, 0.35);
-  border-radius: 6px;
-  background: none;
-  color: var(--cheese);
-  font: inherit;
-  font-size: 11px;
-  cursor: pointer;
-  transition: background 0.12s ease;
-}
-
-#update-btn:hover {
-  background: rgba(255, 198, 60, 0.14);
-}
-
-#update-btn.done {
-  border-color: rgba(0, 255, 163, 0.35);
-  color: var(--live);
+.update span {
+  font-variant-numeric: tabular-nums;
 }
 
 /* ── 섹션 ────────────────────────────────────────────────── */
@@ -126,33 +89,6 @@ section + section {
   font-size: 12px;
   font-weight: 600;
   color: var(--ink);
-}
-
-/* 켜진 기능 수를 방송 장비 미터처럼 보여준다 */
-.meter {
-  display: flex;
-  gap: 2px;
-  margin-left: auto;
-}
-
-.meter i {
-  width: 3px;
-  height: 9px;
-  border-radius: 1px;
-  background: rgba(255, 255, 255, 0.1);
-  transition: background 0.15s ease;
-}
-
-.meter i.on {
-  background: var(--live);
-}
-
-.count {
-  min-width: 12px;
-  font-size: 11px;
-  color: var(--ink-3);
-  font-variant-numeric: tabular-nums;
-  text-align: right;
 }
 
 /* ── 행 ──────────────────────────────────────────────────── */
@@ -188,6 +124,9 @@ section + section {
 }
 
 /* ── 스위치 ──────────────────────────────────────────────── */
+/* 켜짐 표시는 노브의 위치 + 색으로 알린다.
+   트랙까지 초록으로 채우면 24개가 동시에 빛나 위계가 무너지므로,
+   트랙은 중립으로 두고 색은 작은 노브에만 쓴다. */
 .switch {
   appearance: none;
   -webkit-appearance: none;
@@ -195,10 +134,11 @@ section + section {
   width: 34px;
   height: 20px;
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.07);
   position: relative;
   cursor: pointer;
-  transition: background 0.15s ease;
+  transition: background 0.15s ease, box-shadow 0.15s ease;
 }
 
 .switch::after {
@@ -209,19 +149,18 @@ section + section {
   width: 14px;
   height: 14px;
   border-radius: 50%;
-  background: var(--ink-3);
+  background: #565b63;
   transition: transform 0.15s ease, background 0.15s ease;
 }
 
-/* 켜짐은 노브 위치와 밝기로만 알린다. 초록은 섹션 미터에만 쓴다 —
-   스위치마다 색을 넣으면 24개가 동시에 빛나 위계가 무너진다. */
 .switch:checked {
-  background: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.13);
+  box-shadow: inset 0 0 0 1px rgba(0, 255, 163, 0.25);
 }
 
 .switch:checked::after {
   transform: translateX(14px);
-  background: var(--ink);
+  background: var(--live);
 }
 
 .switch:focus-visible {

@@ -12,18 +12,12 @@
   </header>
 
   <div class="update" id="update" hidden>
-    <div class="update-copy">
-      <strong>새 버전 <span id="update-version"></span></strong>
-      <span>터미널에 명령을 붙여넣으면 업데이트됩니다</span>
-    </div>
-    <button type="button" id="update-btn">명령 복사</button>
+    새 버전 <span id="update-version"></span> 이 있습니다
   </div>
 
   <section>
     <div class="sec-head">
       <h2>플레이어</h2>
-      <span class="meter" aria-hidden="true"></span>
-      <span class="count"></span>
     </div>
     <label class="row">
       <div class="text">
@@ -85,8 +79,6 @@
   <section>
     <div class="sec-head">
       <h2>채팅</h2>
-      <span class="meter" aria-hidden="true"></span>
-      <span class="count"></span>
     </div>
     <label class="row">
       <div class="text">
@@ -102,13 +94,25 @@
       </div>
       <input type="checkbox" data-key="chatMacros" class="switch" />
     </label>
+    <label class="row">
+      <div class="text">
+        <span class="label">블라인드 채팅 보기</span>
+        <span class="desc">가려진 채팅을 원문으로 되돌림 (보는 중에 가려진 것만)</span>
+      </div>
+      <input type="checkbox" data-key="revealBlind" class="switch" />
+    </label>
+    <label class="row">
+      <div class="text">
+        <span class="label">랭킹 숨기기</span>
+        <span class="desc">채팅창 후원·통나무 랭킹 숨김</span>
+      </div>
+      <input type="checkbox" data-key="hideRanking" class="switch" />
+    </label>
   </section>
 
   <section>
     <div class="sec-head">
       <h2>탐색</h2>
-      <span class="meter" aria-hidden="true"></span>
-      <span class="count"></span>
     </div>
     <label class="row">
       <div class="text">
@@ -162,8 +166,6 @@
   <section>
     <div class="sec-head">
       <h2>화면 정리</h2>
-      <span class="meter" aria-hidden="true"></span>
-      <span class="count"></span>
     </div>
     <label class="row">
       <div class="text">

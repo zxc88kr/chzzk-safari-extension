@@ -49,6 +49,14 @@ html.czse-ts-off .czse-ts {
   display: none;
 }
 
+/* 채팅창 후원·통나무 랭킹 숨김.
+   :has(> …) 로 직계 자식만 보게 해서, 큰 컨테이너가 통째로 사라지지 않게 한다. */
+html.czse-hide-ranking #aside-chatting [class*="_container_"]:has(> [class*="_ranking_"]),
+html.czse-hide-ranking #aside-chatting [class*="_ranking_container_"],
+html.czse-hide-ranking [class*="live_chatting_ranking_container__"] {
+  display: none !important;
+}
+
 /* 시스템 공지 숨김 (chat.js 가 닉네임 부재 구조로 태깅) */
 [data-czse-hidden-notice] {
   display: none !important;

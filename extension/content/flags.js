@@ -10,6 +10,7 @@
     hideSidebarCategory: "czse-hide-category",
     hideSidebarSchedule: "czse-hide-schedule",
     hidePromo: "czse-hide-promo",
+    hideRanking: "czse-hide-ranking",
   };
 
   const apply = () => {

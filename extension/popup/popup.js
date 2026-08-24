@@ -4,8 +4,6 @@ const api = globalThis.browser ?? globalThis.chrome;
 
 const MANIFEST_URL =
   "https://raw.githubusercontent.com/zxc88kr/chzzk-safari-extension/main/extension/manifest.json";
-const INSTALL_CMD =
-  "curl -fsSL https://raw.githubusercontent.com/zxc88kr/chzzk-safari-extension/main/install.sh | bash";
 const CHECK_KEY = "czseUpdateCheck";
 const CHECK_INTERVAL = 6 * 60 * 60 * 1000;
 
@@ -35,27 +33,6 @@ const compareVersions = (a, b) => {
   return 0;
 };
 
-// 섹션별로 몇 개가 켜졌는지 미터에 반영
-const paintMeters = () => {
-  for (const section of document.querySelectorAll("section")) {
-    const boxes = [...section.querySelectorAll('input[type="checkbox"]')];
-    if (!boxes.length) continue;
-    const meter = section.querySelector(".meter");
-    const count = section.querySelector(".count");
-    if (!meter) continue;
-
-    if (meter.children.length !== boxes.length) {
-      meter.replaceChildren(
-        ...boxes.map(() => document.createElement("i"))
-      );
-    }
-    const on = boxes.filter((b) => b.checked).length;
-    [...meter.children].forEach((seg, i) => seg.classList.toggle("on", i < on));
-    if (count) count.textContent = String(on);
-    meter.setAttribute("aria-label", `${boxes.length}개 중 ${on}개 켜짐`);
-  }
-};
-
 // 새 버전이 있으면 알림 띄우기. 결과는 캐시해 자주 조회하지 않는다.
 const checkUpdate = async () => {
   const current = api.runtime.getManifest().version;
@@ -77,20 +54,8 @@ const checkUpdate = async () => {
 
   if (!latest || compareVersions(latest, current) <= 0) return;
 
-  const banner = document.getElementById("update");
   document.getElementById("update-version").textContent = latest;
-  banner.hidden = false;
-
-  const button = document.getElementById("update-btn");
-  button.addEventListener("click", async () => {
-    try {
-      await navigator.clipboard.writeText(INSTALL_CMD);
-      button.textContent = "복사됨";
-      button.classList.add("done");
-    } catch {
-      button.textContent = "복사 실패";
-    }
-  });
+  document.getElementById("update").hidden = false;
 };
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -130,11 +95,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         syncDependents(key, input.checked);
         input.addEventListener("change", () => {
           syncDependents(key, input.checked);
-          paintMeters();
           save(key, input.checked, () => {
             input.checked = !input.checked;
             syncDependents(key, input.checked);
-            paintMeters();
           });
         });
       } else if (input.type === "range") {
@@ -149,7 +112,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
     }
 
-    paintMeters();
     checkUpdate();
   } catch (err) {
     showError(`초기화 실패: ${err?.message ?? err}`);
