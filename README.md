@@ -50,7 +50,7 @@ curl -fsSL https://raw.githubusercontent.com/zxc88kr/chzzk-safari-extension/main
 끝나면 **Safari → 설정(⌘,) → 확장 프로그램**에서 체크하고 `chzzk.naver.com` 권한을 허용하면 됩니다.
 
 > [!IMPORTANT]
-> **Xcode가 설치돼 있어야 합니다** (App Store, 10GB 이상).
+> **Xcode가 설치돼 있어야 합니다** (App Store, 약 4GB).
 > Safari 확장은 앱으로 포장해 서명해야만 설치되는데, 무료 Apple ID로 서명하려면 Xcode가 필요합니다.
 > Xcode 설치 후 **Settings(⌘,) → Accounts → `+`** 로 Apple ID를 한 번 추가해 주세요. 유료 등록은 필요 없습니다.
 

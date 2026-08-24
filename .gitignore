@@ -3,3 +3,6 @@ xcuserdata/
 build/
 DerivedData/
 *.xcworkspace/xcshareddata/swiftpm/
+
+# 로컬 개발 노트 (공개 저장소에 포함하지 않음)
+CLAUDE.md

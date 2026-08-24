@@ -29,7 +29,7 @@ if ! xcodebuild -version >/dev/null 2>&1; then
     "Safari 확장은 앱으로 포장해 서명해야 하고, 무료 Apple ID 로 서명하려면 Xcode 가 있어야 합니다." \
     "(명령어 도구만으로는 안 되며, App Store 에서 Xcode 를 설치해야 합니다)" \
     "" \
-    "  1) App Store 에서 'Xcode' 설치 (10GB 이상, 시간이 꽤 걸립니다)" \
+    "  1) App Store 에서 'Xcode' 설치 (약 4GB, 시간이 꽤 걸립니다)" \
     "  2) Xcode 를 한 번 실행해 초기 설정 완료" \
     "  3) Xcode → Settings(⌘,) → Accounts → '+' → Apple ID 로그인" \
     "  4) 이 명령을 다시 실행"
