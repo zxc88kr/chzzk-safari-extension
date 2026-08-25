@@ -4,17 +4,31 @@
 // Safari 는 <video> 가 HLS(m3u8)를 네이티브 재생하므로 별도 플레이어가 필요 없다.
 (() => {
   const CACHE_TTL = 60 * 1000;
+  const CACHE_MAX = 50;
 
   let hoverAnchor = null;
   let timer = null;
   let card = null;
   const cache = new Map(); // channelId -> { info, at }
 
+  const pruneExpiredCache = (now) => {
+    for (const [channelId, cached] of cache) {
+      if (now - cached.at >= CACHE_TTL) cache.delete(channelId);
+    }
+  };
+
   const getLiveDetail = async (channelId) => {
+    const now = Date.now();
+    pruneExpiredCache(now);
     const hit = cache.get(channelId);
-    if (hit && Date.now() - hit.at < CACHE_TTL) return hit.info;
+    if (hit) return hit.info;
     const info = await czse.util.liveDetail(channelId);
-    cache.set(channelId, { info, at: Date.now() });
+    const fetchedAt = Date.now();
+    pruneExpiredCache(fetchedAt);
+    while (!cache.has(channelId) && cache.size >= CACHE_MAX) {
+      cache.delete(cache.keys().next().value);
+    }
+    cache.set(channelId, { info, at: fetchedAt });
     return info;
   };
 

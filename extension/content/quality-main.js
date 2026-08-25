@@ -8,15 +8,25 @@
 
   const MESSAGE_TYPE = "czse:max-quality-setting";
   const LIVE_TRACK_KEY = "live-player-video-track";
+  const PLAYER_STALE_MS = 5 * 60 * 1000;
+  const INACTIVE_CLEANUP_INTERVAL = 60 * 1000;
   const players = new Map();
   const patchedPrototypes = new WeakSet();
+  let lastInactiveCleanupAt = 0;
 
   const setStatus = (status, track = null) => {
     const root = document.documentElement;
     if (!root) return;
-    root.dataset.czseQualityStatus = status;
-    if (track) root.dataset.czseQualityTrack = track;
-    else delete root.dataset.czseQualityTrack;
+    if (root.dataset.czseQualityStatus !== status) {
+      root.dataset.czseQualityStatus = status;
+    }
+    if (track) {
+      if (root.dataset.czseQualityTrack !== track) {
+        root.dataset.czseQualityTrack = track;
+      }
+    } else if (root.dataset.czseQualityTrack !== undefined) {
+      delete root.dataset.czseQualityTrack;
+    }
   };
 
   const enabled = () =>
@@ -214,18 +224,29 @@
     }
   };
 
-  const activePlayer = () => {
+  const connectedPlayers = (now = Date.now()) => {
     const connected = [];
-    const now = Date.now();
     for (const [player, lastConnectedAt] of players) {
       const root = playerRoot(player);
       if (root?.isConnected) {
         players.set(player, now);
         connected.push({ player, root });
-      } else if (now - lastConnectedAt > 5 * 60 * 1000) {
+      } else if (now - lastConnectedAt > PLAYER_STALE_MS) {
         players.delete(player);
       }
     }
+    return connected;
+  };
+
+  const cleanInactivePlayers = () => {
+    const now = Date.now();
+    if (now - lastInactiveCleanupAt < INACTIVE_CLEANUP_INTERVAL) return;
+    lastInactiveCleanupAt = now;
+    connectedPlayers(now);
+  };
+
+  const activePlayer = () => {
+    const connected = connectedPlayers();
     if (!connected.length) return null;
 
     const mainVideo = document.querySelector(
@@ -236,8 +257,18 @@
       ? connected.filter(({ root }) => root.contains(mainVideo))
       : [];
     const candidates = containingVideo.length ? containingVideo : connected;
-    candidates.sort((a, b) => rootArea(b.root) - rootArea(a.root));
-    return candidates[0];
+    if (candidates.length === 1) return candidates[0];
+
+    let largest = candidates[0];
+    let largestArea = rootArea(largest.root);
+    for (let i = 1; i < candidates.length; i += 1) {
+      const area = rootArea(candidates[i].root);
+      if (area > largestArea) {
+        largest = candidates[i];
+        largestArea = area;
+      }
+    }
+    return largest;
   };
 
   const qualityPane = (root) => {
@@ -322,10 +353,12 @@
 
   const enforce = () => {
     if (!enabled()) {
+      cleanInactivePlayers();
       setStatus("disabled");
       return;
     }
     if (!isPlayerPage()) {
+      cleanInactivePlayers();
       setStatus("idle");
       return;
     }

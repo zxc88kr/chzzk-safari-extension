@@ -122,20 +122,39 @@ const createMainHarness = ({
   pathname = "/live/channel-id",
   enabled = true,
   filter = () => true,
+  hasMainVideo = true,
+  now = 0,
 } = {}) => {
   const intervals = [];
   const timeouts = [];
   const windowListeners = {};
   const writes = [];
   const stored = new Map();
+  const counters = {
+    datasetWrites: 0,
+    documentQueries: 0,
+    paneFilters: 0,
+    paneQueries: 0,
+    rectReads: 0,
+    rootContains: 0,
+    storageGets: 0,
+    storageSets: 0,
+  };
   const mainVideo = {};
   const body = {};
-  const pane = { filter };
+  let currentNow = now;
+  const pane = {
+    filter(...args) {
+      counters.paneFilters += 1;
+      return filter(...args);
+    },
+  };
 
   const makeRoot = ({ containsMain = false, connected = true, area = 100 } = {}) => {
     const parent = {
       parentElement: body,
       querySelector(selector) {
+        counters.paneQueries += 1;
         return selector === "pzp-setting-quality-pane" ? pane : null;
       },
     };
@@ -143,24 +162,38 @@ const createMainHarness = ({
       isConnected: connected,
       parentElement: parent,
       contains(element) {
+        counters.rootContains += 1;
         return containsMain && element === mainVideo;
       },
       getBoundingClientRect() {
+        counters.rectReads += 1;
         return { width: area, height: area };
       },
     };
   };
 
+  const datasetValues = { czseMaxQuality: enabled ? "1" : "0" };
   const documentElement = {
-    dataset: { czseMaxQuality: enabled ? "1" : "0" },
+    dataset: new Proxy(datasetValues, {
+      deleteProperty(target, property) {
+        counters.datasetWrites += 1;
+        return Reflect.deleteProperty(target, property);
+      },
+      set(target, property, value) {
+        counters.datasetWrites += 1;
+        return Reflect.set(target, property, value);
+      },
+    }),
   };
   const context = {
+    Date: { now: () => currentNow },
     __exports: {},
     document: {
       body,
       documentElement,
       querySelector(selector) {
-        if (selector.includes("video")) return mainVideo;
+        counters.documentQueries += 1;
+        if (selector.includes("video")) return hasMainVideo ? mainVideo : null;
         if (selector === "pzp-setting-quality-pane") return pane;
         return null;
       },
@@ -171,9 +204,11 @@ const createMainHarness = ({
     },
     localStorage: {
       getItem(key) {
+        counters.storageGets += 1;
         return stored.has(key) ? stored.get(key) : null;
       },
       setItem(key, value) {
+        counters.storageSets += 1;
         writes.push([key, value]);
         stored.set(key, value);
       },
@@ -261,7 +296,11 @@ const createMainHarness = ({
 
   return {
     addPlayer,
+    advanceTime(ms) {
+      currentNow += ms;
+    },
     context,
+    counters,
     documentElement,
     exposeCorePlayer,
     makeRoot,
@@ -272,6 +311,12 @@ const createMainHarness = ({
       });
     },
     stored,
+    resetCounters() {
+      for (const key of Object.keys(counters)) counters[key] = 0;
+    },
+    runTicks(count) {
+      for (let i = 0; i < count; i += 1) intervals[0][0]();
+    },
     tick() {
       intervals[0][0]();
     },
@@ -386,6 +431,30 @@ test("화질 메뉴 filter가 허용한 트랙 안에서 최고 화질을 선택
 
   harness.tick();
   assert.equal(trackSet.tracks[1].selected, true);
+});
+
+test("송출 최대 화질이 720p이면 존재하지 않는 1080p를 가정하지 않는다", () => {
+  const harness = createMainHarness();
+  harness.exposeCorePlayer();
+  const trackSet = createTracks([
+    { label: "ABR", width: 7680, height: 4320, selected: false },
+    { label: "360p", width: 640, height: 360, selected: true },
+    { label: "720p", width: 1280, height: 720, selected: false },
+  ]);
+  harness.addPlayer(
+    "__mainPlayer",
+    harness.makeRoot({ containsMain: true }),
+    trackSet
+  );
+
+  harness.tick();
+
+  assert.equal(trackSet.tracks[2].selected, true);
+  assert.equal(harness.documentElement.dataset.czseQualityTrack, "720p");
+  assert.equal(
+    harness.stored.get("live-player-video-track"),
+    '{"label":"720p","width":1280,"height":720}'
+  );
 });
 
 test("메인 video를 포함하지 않는 미리보기 플레이어는 건드리지 않는다", () => {
@@ -581,6 +650,121 @@ test("CorePlayer가 없는 페이지에서는 defineProperty 훅을 제한 시�
     harness.documentElement.dataset.czseQualityStatus,
     "waiting-capture"
   );
+});
+
+test("안정된 최고 화질에서는 반복 DOM·트랙·storage 쓰기가 없다", () => {
+  const harness = createMainHarness();
+  harness.exposeCorePlayer();
+  const trackSet = createTracks([
+    { label: "720p", width: 1280, height: 720, selected: true },
+    { label: "1080p", width: 1920, height: 1080, selected: false },
+  ]);
+  harness.addPlayer(
+    "__mainPlayer",
+    harness.makeRoot({ containsMain: true }),
+    trackSet
+  );
+
+  harness.tick();
+  harness.tick();
+  const trackWrites = trackSet.writes();
+  harness.resetCounters();
+  harness.runTicks(1000);
+
+  assert.equal(harness.counters.datasetWrites, 0);
+  assert.equal(trackSet.writes(), trackWrites);
+  assert.equal(harness.counters.storageSets, 0);
+  assert.equal(harness.counters.documentQueries, 1000);
+  assert.equal(harness.counters.rootContains, 1000);
+  assert.equal(harness.counters.paneQueries, 1000);
+  assert.equal(harness.counters.rectReads, 0);
+});
+
+test("설정 off와 비대상 경로의 안정 상태에서는 DOM 탐색과 쓰기가 없다", () => {
+  for (const options of [
+    { enabled: false, pathname: "/live/channel-id" },
+    { enabled: true, pathname: "/lives" },
+  ]) {
+    const harness = createMainHarness(options);
+    harness.exposeCorePlayer();
+    const trackSet = createTracks([
+      { label: "720p", width: 1280, height: 720, selected: true },
+      { label: "1080p", width: 1920, height: 1080, selected: false },
+    ]);
+    harness.addPlayer(
+      "__mainPlayer",
+      harness.makeRoot({ containsMain: true }),
+      trackSet
+    );
+
+    harness.tick();
+    harness.resetCounters();
+    harness.runTicks(1000);
+
+    assert.equal(harness.counters.datasetWrites, 0);
+    assert.equal(harness.counters.documentQueries, 0);
+    assert.equal(harness.counters.paneQueries, 0);
+    assert.equal(harness.counters.rectReads, 0);
+    assert.equal(harness.counters.storageGets, 0);
+    assert.equal(harness.counters.storageSets, 0);
+    assert.equal(trackSet.writes(), 0);
+  }
+});
+
+test("메인 video가 없을 때 후보별 레이아웃을 한 번만 읽는다", () => {
+  const harness = createMainHarness({ hasMainVideo: false });
+  harness.exposeCorePlayer();
+  const players = [100, 500, 300, 200, 400].map((area, index) => {
+    const trackSet = createTracks([
+      { label: "720p", width: 1280, height: 720, selected: true },
+      { label: "1080p", width: 1920, height: 1080, selected: false },
+    ]);
+    harness.addPlayer(
+      `__player${index}`,
+      harness.makeRoot({ area }),
+      trackSet
+    );
+    return trackSet;
+  });
+
+  harness.resetCounters();
+  harness.tick();
+
+  assert.equal(harness.counters.rectReads, players.length);
+  assert.equal(players[1].tracks[1].selected, true);
+  for (const [index, trackSet] of players.entries()) {
+    if (index !== 1) assert.equal(trackSet.tracks[0].selected, true);
+  }
+});
+
+test("비대상 경로의 플레이어는 SPA 재사용 유예 뒤에만 정리한다", () => {
+  for (const { elapsed, retained } of [
+    { elapsed: 2 * 60 * 1000, retained: true },
+    { elapsed: 5 * 60 * 1000 + 1, retained: false },
+  ]) {
+    const harness = createMainHarness();
+    harness.exposeCorePlayer();
+    const root = harness.makeRoot({ connected: false, containsMain: true });
+    const trackSet = createTracks([
+      { label: "720p", width: 1280, height: 720, selected: true },
+      { label: "1080p", width: 1920, height: 1080, selected: false },
+    ]);
+    harness.addPlayer("__mainPlayer", root, trackSet);
+
+    harness.context.location.pathname = "/";
+    harness.advanceTime(elapsed);
+    harness.tick();
+
+    root.isConnected = true;
+    harness.context.location.pathname = "/live/channel-id";
+    harness.message();
+
+    assert.equal(trackSet.tracks[1].selected, retained);
+    assert.equal(
+      harness.documentElement.dataset.czseQualityStatus,
+      retained ? "applied" : "waiting-capture"
+    );
+  }
 });
 
 test("manifest가 document_start loader와 MAIN world 리소스를 연결한다", () => {
