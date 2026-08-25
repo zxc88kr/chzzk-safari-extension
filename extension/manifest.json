@@ -39,7 +39,6 @@
         "content/util.js",
         "content/flags.js",
         "content/player.js",
-        "content/quality.js",
         "content/widescreen.js",
         "content/lumber.js",
         "content/unmute.js",
@@ -56,6 +55,30 @@
         "content/content.css"
       ],
       "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "*://chzzk.naver.com/*"
+      ],
+      "exclude_matches": [
+        "*://chzzk.naver.com/chat/*",
+        "*://chzzk.naver.com/embed/*",
+        "*://chzzk.naver.com/error*"
+      ],
+      "js": [
+        "content/quality-loader.js"
+      ],
+      "run_at": "document_start"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "content/quality-main.js"
+      ],
+      "matches": [
+        "*://chzzk.naver.com/*"
+      ]
     }
   ]
 }
