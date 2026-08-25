@@ -6,6 +6,7 @@ const CZSE_DEFAULTS = {
   latencyDisplay: true, // 지연시간 칩 표시 (클릭: 1.5배속 따라잡기, Shift+클릭: 라이브 지점 이동)
   arrowSeek: true, // ←/→ 방향키 탐색
   seekStep: 5, // 방향키 이동 간격(초)
+  maxQuality: false, // 라이브·다시보기에서 가능한 최고 화질 유지
   autoWide: false, // 라이브 진입 시 자동 넓은 화면
   autoLumber: false, // 통나무(파워) 자동 획득
   autoUnmute: false, // 라이브 진입 시 자동 음소거 해제
