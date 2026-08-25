@@ -110,7 +110,14 @@ if [ -n "$SELF_DIR" ] && [ -d "$SELF_DIR/app" ] && [ -d "$SELF_DIR/extension" ];
   say "소스: $SRC_DIR (현재 저장소)"
 elif [ -d "$SRC_DIR/.git" ]; then
   say "소스 업데이트 중…"
-  git -C "$SRC_DIR" pull --ff-only --quiet || warn "업데이트 실패 — 기존 소스로 진행합니다."
+  # 2.0.0 때 히스토리를 squash 로 갈아엎어서, 그 이전에 받아 둔 사본은 origin/main 과
+  # 조상을 공유하지 않는다 → ff 가 영원히 실패하고 옛 소스로 계속 빌드된다.
+  # 사용자 사본은 읽기 전용이므로 실패하면 원격 기준으로 맞춰 버린다.
+  if ! git -C "$SRC_DIR" pull --ff-only --quiet 2>/dev/null &&
+     ! { git -C "$SRC_DIR" fetch --quiet origin main &&
+         git -C "$SRC_DIR" reset --hard --quiet FETCH_HEAD; }; then
+    warn "업데이트 실패 — 기존 소스로 진행합니다."
+  fi
 else
   say "소스 내려받는 중…"
   # git 은 Xcode 에 동봉돼 위에서 이미 보장된다. 실패는 사실상 네트워크 문제.
