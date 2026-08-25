@@ -782,7 +782,7 @@ test("manifest가 document_start loader와 MAIN world 리소스를 연결한다"
   const manifest = JSON.parse(
     fs.readFileSync(path.join(ROOT, "extension/manifest.json"), "utf8")
   );
-  assert.equal(manifest.version, "2.0.1");
+  assert.equal(manifest.version, "2.1.0");
   const loader = manifest.content_scripts.find((entry) =>
     entry.js.includes("content/quality-loader.js")
   );
