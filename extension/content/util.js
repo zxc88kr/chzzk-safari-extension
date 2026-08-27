@@ -120,6 +120,16 @@ czse.util = {
     return `${pad2(date.getHours())}:${pad2(date.getMinutes())}:${pad2(date.getSeconds())}`;
   },
 
+  // 영상 시작 후 경과 시간 (다시보기 채팅). 1시간이 넘으면 H:MM:SS.
+  timeOffset(ms) {
+    const { pad2 } = czse.util;
+    const total = Math.max(0, Math.floor(ms / 1000));
+    const h = Math.floor(total / 3600);
+    const m = Math.floor((total % 3600) / 60);
+    const s = total % 60;
+    return h ? `${h}:${pad2(m)}:${pad2(s)}` : `${pad2(m)}:${pad2(s)}`;
+  },
+
   formatViewers(n) {
     if (n == null) return "";
     if (n >= 10000) return `${(n / 10000).toFixed(1)}만명`;

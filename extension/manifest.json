@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Chzzk Safari Extension",
-  "version": "2.1.1",
+  "version": "2.2.0",
   "description": "치지직 시청 편의 기능: 지연시간 표시·따라잡기, 방향키 탐색, 채팅 타임스탬프, 호버 미리보기, 사이드바 자동 갱신, 방송 시작 자동 새로고침",
   "icons": {
     "48": "icons/icon-48.png",
@@ -66,7 +66,8 @@
         "*://chzzk.naver.com/error*"
       ],
       "js": [
-        "content/quality-loader.js"
+        "content/quality-loader.js",
+        "content/chattime-loader.js"
       ],
       "run_at": "document_start"
     }
@@ -74,7 +75,8 @@
   "web_accessible_resources": [
     {
       "resources": [
-        "content/quality-main.js"
+        "content/quality-main.js",
+        "content/chattime-main.js"
       ],
       "matches": [
         "*://chzzk.naver.com/*"

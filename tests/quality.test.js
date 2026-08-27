@@ -782,7 +782,9 @@ test("manifest가 document_start loader와 MAIN world 리소스를 연결한다"
   const manifest = JSON.parse(
     fs.readFileSync(path.join(ROOT, "extension/manifest.json"), "utf8")
   );
-  assert.equal(manifest.version, "2.1.1");
+  // 버전은 값이 아니라 형식만 본다 — 배포마다 바뀌는 값을 박아두면 버전업할 때마다
+  // 이 테스트를 같이 고쳐야 하고, 그건 검증이 아니라 잡일이다.
+  assert.match(manifest.version, /^\d+\.\d+\.\d+$/);
   const loader = manifest.content_scripts.find((entry) =>
     entry.js.includes("content/quality-loader.js")
   );
