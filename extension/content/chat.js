@@ -52,8 +52,9 @@
     const items = newestFirst ? scoped : scoped.reverse();
     const limit = Math.min(items.length, 60);
     // 다시보기 컷오프: 히스토리엔 재생 위치보다 앞선(아직 안 그려진) 항목이 미리 와 있다
+    const vod = location.pathname.startsWith("/video/");
     const video = czse.util.findVideo?.() ?? document.querySelector("video");
-    const cutoff = video && Number.isFinite(video.currentTime)
+    const cutoff = vod && video && Number.isFinite(video.currentTime)
       ? video.currentTime * 1000 + 3000
       : null;
     const counts = new Map();
@@ -71,7 +72,7 @@
       if (item.querySelector(`.${CLASS}`)) continue; // 이미 찍힘 — 순번만 소진
       // 작성 시각을 모르는 줄(필터된 채팅의 자리 등)은 찍지 않는다. 렌더 시각으로
       // 대신하면 백로그가 전부 같은 값이 되고 다시보기는 현실 시각이 찍힌다.
-      const found = chatTime.lookup(key, occ, cutoff);
+      const found = chatTime.lookup(key, occ, vod ? "offset" : "clock", cutoff);
       if (found) addSpan(nickname, found);
     }
   };

@@ -362,7 +362,7 @@ test("다시보기: 재생 위치 컷오프 뒤의 미래 항목은 짝짓지 �
   ]);
   const k = loader.key("가", "");
 
-  assert.equal(loader.lookup(k, 0, 65000).t, 60000); // 재생 65초: 1시간 뒤 사본 제외
+  assert.equal(loader.lookup(k, 0, "offset", 65000).t, 60000); // 재생 65초: 1시간 뒤 사본 제외
   assert.equal(loader.lookup(k, 0).t, 3600000); // 컷오프 없으면(라이브) 최신
 });
 
@@ -374,4 +374,17 @@ test("채팅 채널이 바뀌면 히스토리를 비운다", () => {
 
   assert.equal(loader.lookup(loader.key("가", "안녕"), 0), null);
   assert.equal(loader.lookup(loader.key("나", "야"), 0).t, 200);
+});
+
+test("라이브 페이지는 clock 항목만 짝짓는다 — 되감기 offset 오염 차단", () => {
+  // 라이브에서 이모티콘-전용 채팅이 26:20(영상 시점)으로 찍힌 실측 버그.
+  const loader = createLoaderHarness();
+  loader.deliver([
+    { t: 1787841464251, mode: "clock", nickname: "가", msg: "{:d_1:}", src: "N1" },
+    { t: 1580000, mode: "offset", nickname: "가", msg: "{:d_1:}", src: "N1" },
+  ]);
+  const k = loader.key("가", "");
+
+  assert.equal(loader.lookup(k, 0, "clock").t, 1787841464251);
+  assert.equal(loader.lookup(k, 0, "offset").t, 1580000);
 });
