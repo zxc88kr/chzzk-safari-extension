@@ -149,13 +149,19 @@ window.__render = function (scale) {
 </script>
 """
 
-html = html.replace(
-    '<link rel="stylesheet" href="popup.css" />',
-    "<style>\n" + css + "\n" + poster + "\n</style>", 1)
-html = html.replace(
-    '  <script src="../common/defaults.js"></script>',
-    "  " + shim + '  <script src="../common/defaults.js"></script>', 1)
-html = html.replace("</body>", tail + "</body>", 1)
+def swap(text, anchor, replacement):
+    # popup.html 이 바뀌어 앵커가 사라지면 replace 가 조용히 아무것도 안 한다.
+    # 그대로 두면 스타일이나 shim 이 빠진 이미지가 만들어져 커밋된다 — 여기서 죽인다.
+    if anchor not in text:
+        raise SystemExit("popup.html 에서 못 찾음: " + anchor)
+    return text.replace(anchor, replacement, 1)
+
+
+html = swap(html, '<link rel="stylesheet" href="popup.css" />',
+            "<style>\n" + css + "\n" + poster + "\n</style>")
+html = swap(html, '  <script src="../common/defaults.js"></script>',
+            "  " + shim + '  <script src="../common/defaults.js"></script>')
+html = swap(html, "</body>", tail + "</body>")
 
 (work / "popup").mkdir(parents=True)
 (work / "popup" / "popup.html").write_text(html)
@@ -171,14 +177,24 @@ print(json.load(open('$ROOT/extension/manifest.json'))['version'])")"
 js() { osascript -e "tell application \"Safari\" to do JavaScript \"$1\" in current tab of (first window whose id is $WIN)"; }
 
 echo "▶ Safari 에서 렌더 중…"
+# front window 로 잡으면 그 사이 다른 창이 앞으로 올 때 엉뚱한 창을 물고,
+# cleanup 이 사용자의 창을 닫아버린다. 우리가 연 URL 로 창을 특정한다.
 WIN="$(osascript <<EOF
 tell application "Safari"
   make new document with properties {URL:"file://$WORK/popup/popup.html"}
-  delay 3
-  return (id of front window as string)
+  repeat 40 times
+    repeat with w in windows
+      try
+        if (URL of current tab of w) contains "$(basename "$WORK")" then return (id of w as string)
+      end try
+    end repeat
+    delay 0.25
+  end repeat
+  return "0"
 end tell
 EOF
 )" || die "Safari 를 열지 못했습니다."
+[ "$WIN" != "0" ] || { WIN=""; die "스크린샷 창을 찾지 못했습니다."; }
 
 PROBE="$(js "String(typeof window.__render)")" || die \
   "Safari 에서 JavaScript 를 실행하지 못했습니다.
@@ -187,12 +203,17 @@ PROBE="$(js "String(typeof window.__render)")" || die \
 [ "$PROBE" = "function" ] || die "스크린샷 페이지가 로드되지 않았습니다."
 
 js "window.__render(2)" >/dev/null
-sleep 3
 
-ERR="$(js "String(window.__err)")"
-[ "$ERR" = "null" ] || die "렌더 실패: $ERR"
+# 고정 대기는 느린 기기에서 그대로 실패한다 — 끝날 때까지 짧게 확인한다
+for _ in $(seq 1 60); do
+  STATE="$(js "window.__err !== null ? 'err' : (window.__png ? 'ok' : 'wait')")"
+  [ "$STATE" = "wait" ] || break
+  sleep 0.25
+done
+[ "$STATE" != "err" ] || die "렌더 실패: $(js "String(window.__err)")"
+[ "$STATE" = "ok" ] || die "렌더가 끝나지 않았습니다 (15초 초과)."
 
-LEN="$(js "String((window.__png||'').length)")"
+LEN="$(js "String(window.__png.length)")"
 [ "$LEN" -gt 0 ] 2>/dev/null || die "PNG 를 만들지 못했습니다."
 
 # dataURL 이 수십만 자라 osascript 반환값으로 한 번에 못 받는다 — 잘라서 이어붙인다.
@@ -223,5 +244,7 @@ if new != s:
     print("  README 캐시 키 → " + sys.argv[2])
 PY
 
-SIZE="$(sips -g pixelWidth -g pixelHeight "$OUT" | awk '/pixel/{printf "%s ", $2}')"
-echo "✓ $OUT  (${SIZE}px, v$VERSION)"
+W="$(sips -g pixelWidth "$OUT" | awk '/pixelWidth/{print $2}')"
+H="$(sips -g pixelHeight "$OUT" | awk '/pixelHeight/{print $2}')"
+[ "$W" = "1312" ] || die "폭이 1312 가 아닙니다($W) — 레이아웃이 깨졌을 수 있습니다."
+echo "✓ $OUT  (${W}x${H}px, v$VERSION)"
