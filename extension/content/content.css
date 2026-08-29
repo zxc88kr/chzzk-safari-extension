@@ -76,13 +76,9 @@ html.czse-static-logo [class*="_logo_chzzk_"] {
 }
 
 /* ── UI 정리 ────────────────────────────────────────────── */
-/* 차단한 방송 카드 완전 제거 (webpack/css-module 클래스 모두 대응) */
+/* 차단한 유저: 치지직 방송 카드(webpack·css-module 두 스킴) + 라운지 글(lounge.js 태깅) */
 html.czse-hide-blocked li:has([class*="_is_block_"]),
-html.czse-hide-blocked [class*="component_item__"]:has([class*="video_card_is_block__"]) {
-  display: none !important;
-}
-
-/* 라운지(네이버 게임) 차단 유저 게시글 — lounge.js 가 안내 문구로 태깅한다 */
+html.czse-hide-blocked [class*="component_item__"]:has([class*="video_card_is_block__"]),
 html.czse-hide-blocked [data-czse-blocked-post] {
   display: none !important;
 }

@@ -1,17 +1,12 @@
 #!/bin/bash
-# README 팝업 스크린샷 생성. 설정 항목이나 문구를 바꾼 뒤 이걸 돌리고 커밋한다.
-# 사용: ./scripts/screenshot.sh
+# README 팝업 스크린샷 생성. 팝업 항목·문구를 바꾼 뒤 돌리고 커밋한다.
 #
-# 왜 이렇게 하는가
-# - Safari 확장 팝업은 safari-web-extension://<UUID>/ 아래에 있고 그 UUID 가
-#   페이지 쪽에 안 새어나와서, 실제 팝업을 열어 자동으로 찍을 방법이 없다.
-# - screencapture 는 터미널에 "화면 기록" 권한이 있어야 하고, 권한을 주려면
-#   앱을 재시작해야 한다. 그래서 화면을 찍지 않고 페이지 안에서 PNG 를 굽는다
-#   (DOM → SVG foreignObject → canvas → dataURL).
-# - README 이미지는 팝업을 2단으로 흘린 배치다. 실제 팝업엔 없는 배치라
-#   여기서만 만들고, 실제 팝업 CSS(popup.css)는 건드리지 않는다.
+# 확장 팝업은 safari-web-extension://<UUID>/ 아래라 열어서 찍을 수 없고,
+# screencapture 는 화면 기록 권한(앱 재시작 필요)을 요구한다. 그래서 화면을 찍지 않고
+# 페이지 안에서 굽는다: DOM → SVG foreignObject → canvas → dataURL.
+# 2단 배치는 여기서만 만든다 — 실제 팝업(popup.css)엔 없다.
 #
-# 필요 조건: Safari 개발자 메뉴 → "Apple Events의 JavaScript 허용" 체크.
+# 필요: Safari 개발 메뉴 → "Apple Events의 JavaScript 허용"
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -28,8 +23,7 @@ trap cleanup EXIT
 
 command -v osascript >/dev/null || die "macOS 에서만 동작합니다."
 
-# 스크린샷용 단일 HTML 을 만든다. popup.css 를 인라인해야 foreignObject 안에서
-# 스타일이 살아남는다 (외부 링크는 SVG 안에서 로드되지 않는다).
+# popup.css 를 인라인해야 한다 — 외부 링크는 SVG 안에서 로드되지 않는다.
 python3 - "$ROOT" "$WORK" <<'PY'
 import json, pathlib, sys
 
@@ -38,8 +32,7 @@ html = (root / "extension/popup/popup.html").read_text()
 css = (root / "extension/popup/popup.css").read_text()
 version = json.loads((root / "extension/manifest.json").read_text())["version"]
 
-# 기본값 그대로 찍으면 토글이 전부 회색이라 기능이 안 보인다.
-# 실사용 예시로 켜 두는 항목 — 기존 README 이미지와 같은 조합이다.
+# 기본값 그대로면 토글이 전부 회색이라 기능이 안 보인다 — 실사용 예시 조합.
 SHOWCASE = [
     "latencyDisplay", "arrowSeek", "maxQuality", "autoWide", "autoUnmute",
     "captureButton", "pipButton", "chatTimestamp", "chatMacros",
@@ -47,9 +40,8 @@ SHOWCASE = [
 ]
 
 poster = """
-/* README 스크린샷 전용 2단 배치. 실제 팝업은 328px 한 줄로 쭉 이어지므로
-   칸을 나누지 않고 그 흐름을 절반에서 잘라 옆에 붙인다. 그리드로 칸을 나누면
-   짧은 섹션 아래에 빈 공간이 생긴다. 구분선도 직접 긋지 않고 column-rule 에 맡긴다. */
+/* 실제 팝업은 328px 한 줄로 이어진다 — 그 흐름을 절반에서 잘라 붙일 뿐이다.
+   그리드로 칸을 나누면 짧은 섹션 아래에 빈 공간이 생긴다. */
 body { width: 656px !important; }
 #shot-cols { column-count: 2; column-gap: 0; column-rule: 1px solid var(--line); }
 /* 단이 넘어갈 때 행이 반토막 나지 않게 한다 */
@@ -60,8 +52,7 @@ body { width: 656px !important; }
 """
 
 shim = """<script>
-// 확장 컨텍스트 밖에서 팝업을 그대로 렌더하기 위한 최소 shim.
-// 최신 버전을 현재 버전과 같게 줘서 업데이트 배너가 뜨지 않게 한다.
+// 확장 컨텍스트 밖에서 렌더하기 위한 shim. 최신 버전을 현재와 같게 줘 배너를 막는다.
 const __store = {%s};
 window.browser = {
   runtime: { getManifest: () => ({ version: "%s" }) },
@@ -98,14 +89,12 @@ tail = """<script>
   });
 })();
 
-// DOM 을 SVG foreignObject 에 넣고 canvas 로 구워 PNG dataURL 을 만든다.
 window.__render = function (scale) {
   const clone = document.documentElement.cloneNode(true);
   clone.setAttribute("xmlns", "http://www.w3.org/1999/xhtml");
   clone.querySelectorAll("script").forEach((el) => el.remove());
 
-  // checked/value 는 DOM 프로퍼티라 직렬화하면 날아간다 — 속성으로 옮긴다.
-  // 안 하면 토글이 전부 off, 슬라이더가 중간값으로 굳는다.
+  // checked/value 는 프로퍼티라 직렬화하면 날아간다 — 토글이 전부 off 로 굳는다.
   const live = document.querySelectorAll("input");
   const copies = clone.querySelectorAll("input");
   live.forEach((el, i) => {
@@ -177,8 +166,7 @@ print(json.load(open('$ROOT/extension/manifest.json'))['version'])")"
 js() { osascript -e "tell application \"Safari\" to do JavaScript \"$1\" in current tab of (first window whose id is $WIN)"; }
 
 echo "▶ Safari 에서 렌더 중…"
-# front window 로 잡으면 그 사이 다른 창이 앞으로 올 때 엉뚱한 창을 물고,
-# cleanup 이 사용자의 창을 닫아버린다. 우리가 연 URL 로 창을 특정한다.
+# front window 로 잡으면 엉뚱한 창을 물어 cleanup 이 사용자 창을 닫는다.
 WIN="$(osascript <<EOF
 tell application "Safari"
   make new document with properties {URL:"file://$WORK/popup/popup.html"}
