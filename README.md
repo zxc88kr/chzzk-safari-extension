@@ -45,7 +45,7 @@
 **화면 정리**
 
 - **정적 로고** — 좌상단 로고 움직임 끄기
-- **숨기기** — 차단 방송, 오프라인 채널, 사이드바 추천·파트너 / 인기 카테고리 / 방송 일정, 치즈팜 광고
+- **숨기기** — 차단 유저(방송 카드·라운지 글), 오프라인 채널, 사이드바 추천·파트너 / 인기 카테고리 / 방송 일정, 치즈팜 광고
 
 ## 설치
 
@@ -76,10 +76,22 @@ curl -fsSL https://raw.githubusercontent.com/zxc88kr/chzzk-safari-extension/main
 
 1. **Chzzk Safari Extension** 체크
 2. 권한을 물으면 **chzzk.naver.com 에서 항상 허용** 선택
+3. 라운지 글까지 숨기려면 **game.naver.com** 도 같은 방법으로 허용
 
 이후 주소창 옆 확장 아이콘으로 기능을 하나씩 켜고 끄면 됩니다.
 
+`game.naver.com` 은 안 해도 됩니다. 안 하면 라운지에서만 아무 일도 일어나지 않고, 나머지 기능은 그대로 동작합니다.
+
 ## 문제 해결
+
+<details>
+<summary>라운지 글이 안 숨겨질 때</summary>
+
+<br>
+
+라운지는 `chzzk.naver.com` 이 아니라 **`game.naver.com`** 이라 권한을 따로 받아야 합니다. **Safari → 설정…**(`⌘,`) → **확장 프로그램** → **Chzzk Safari Extension** 에서 `game.naver.com` 을 **"항상 허용"** 으로 바꿔주세요.
+
+</details>
 
 <details>
 <summary>설정 창이 자동으로 안 열릴 때</summary>
@@ -148,7 +160,10 @@ sudo xcodebuild -license accept
 
 ## 권한과 데이터
 
-확장이 요구하는 권한은 **chzzk.naver.com 하나뿐**입니다. 화면 요소를 바꾸고 방송 정보·통나무 API를 호출하는 데 씁니다.
+확장이 요구하는 권한은 **두 사이트**뿐입니다.
+
+- **chzzk.naver.com** — 화면 요소를 바꾸고 방송 정보·통나무 API를 호출하는 데 씁니다.
+- **game.naver.com** — 라운지 글 숨김에만 씁니다. 실제로 동작하는 경로는 `/lounge/` 아래뿐이지만, Safari 는 권한을 도메인 단위로 표시해 `game.naver.com` 전체로 보입니다. 허용하지 않아도 나머지 기능은 정상입니다.
 
 설정과 저장한 문구는 **맥 안에만** 보관되며 어디에도 전송하지 않습니다. 수집·추적·광고 코드가 없습니다.
 

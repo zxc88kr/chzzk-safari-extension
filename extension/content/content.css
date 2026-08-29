@@ -82,6 +82,11 @@ html.czse-hide-blocked [class*="component_item__"]:has([class*="video_card_is_bl
   display: none !important;
 }
 
+/* 라운지(네이버 게임) 차단 유저 게시글 — lounge.js 가 안내 문구로 태깅한다 */
+html.czse-hide-blocked [data-czse-blocked-post] {
+  display: none !important;
+}
+
 /* 프로모션 배너 (flags.js 가 내용 기반으로 태깅) */
 html.czse-hide-promo [data-czse-promo="1"] {
   display: none !important;

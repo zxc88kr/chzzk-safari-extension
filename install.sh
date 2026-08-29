@@ -194,6 +194,7 @@ Safari 확장 설정에서 "Chzzk Safari Extension" 을 켜면 끝입니다.
 
   · 창이 없으면  Safari → 설정(⌘,) → 확장 프로그램  에서 켜기
   · 처음 켤 때 권한을 물으면  "chzzk.naver.com 에서 항상 허용"
+  · 라운지 글까지 숨기려면  "game.naver.com" 도 허용 (안 해도 나머지는 정상)
   · 기능은 주소창 옆 확장 아이콘에서 켜고 끌 수 있어요
 
 EOF
