@@ -12,6 +12,9 @@
   window.__czseChatTimeMain = true;
 
   const MESSAGE_TYPE = "czse:chat-time";
+  const SEND_CHAT = 3101; // 내가 보내는 채팅
+  const SEND_CHAT_ACK = 13101; // 그 응답 — 서버 ctime 만 있고 본문·닉네임은 없다
+  const MAX_PENDING_SENDS = 8; // ACK 를 못 받은 전송이 쌓이는 걸 막는 상한
   // 경로 모양이 아니라 응답 모양으로 판별한다. 이건 파싱 대상을 좁히는 1차 거름망일 뿐이라
   // 치지직이 경로를 바꿔도 vodEntries 가 알아서 빈 배열을 낸다.
   const MAYBE_CHATS = /\/chats\b/;
@@ -74,11 +77,42 @@
   window.WebSocket = new Proxy(OriginalWebSocket, {
     construct(Target, args) {
       const socket = new Target(...args);
+      // 내가 친 채팅은 broadcast 가 늦게 온다(실측: 전송 +52ms 에 ACK, +321ms 에 broadcast).
+      // 화면엔 그 전에 줄이 떠 있으니 ACK 시각을 쓰는데, ACK 엔 본문이 없고 전송 프레임엔
+      // 시각이 없어 둘을 짝지어야 한다.
+      const sent = [];
+      const originalSend = socket.send.bind(socket);
+      socket.send = (data) => {
+        try {
+          const frame = JSON.parse(data);
+          if (frame.cmd === SEND_CHAT && frame.bdy?.msg) {
+            sent.push({ tid: frame.tid, msg: frame.bdy.msg, cid: frame.cid });
+            if (sent.length > MAX_PENDING_SENDS) sent.shift();
+          }
+        } catch {
+          /* 무시 */
+        }
+        return originalSend(data);
+      };
+      // tid 로 짝짓고, ACK 에 tid 가 없으면 보낸 순서대로 꺼낸다.
+      const takeSent = (tid) => {
+        const i = tid == null ? -1 : sent.findIndex((s) => s.tid === tid);
+        return i >= 0 ? sent.splice(i, 1)[0] : sent.shift();
+      };
+      // 닉네임은 어느 쪽에도 없다 — 본문만으로 짝짓도록 mine 으로 표시해 넘긴다.
+      const ackEntries = (frame) => {
+        const t = clockMs(frame.bdy?.ctime ?? frame.bdy?.msgTime);
+        const item = t == null ? null : takeSent(frame.tid);
+        return item
+          ? [{ t, mode: "clock", mine: true, msg: String(item.msg), src: String(item.cid ?? "") }]
+          : [];
+      };
       socket.addEventListener("message", (event) => {
         if (typeof event.data !== "string") return;
         // 여기서 예외가 새어 나가면 페이지의 채팅이 통째로 멈춘다.
         try {
-          publish(liveEntries(JSON.parse(event.data)));
+          const frame = JSON.parse(event.data);
+          publish(frame.cmd === SEND_CHAT_ACK ? ackEntries(frame) : liveEntries(frame));
         } catch {
           /* 무시 */
         }

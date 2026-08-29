@@ -31,10 +31,14 @@ const createMainHarness = () => {
     constructor(url) {
       this.url = url;
       this.listeners = [];
+      this.sent = [];
       sockets.push(this);
     }
     addEventListener(type, listener) {
       if (type === "message") this.listeners.push(listener);
+    }
+    send(data) {
+      this.sent.push(data);
     }
     emit(data) {
       for (const listener of this.listeners) listener({ data });
@@ -132,6 +136,7 @@ const createLoaderHarness = () => {
   return {
     key: (...args) => context.czseChatTime.key(...args),
     lookup: (...args) => context.czseChatTime.lookup(...args),
+    lookupMine: (...args) => context.czseChatTime.lookupMine(...args),
     onDeliver: (fn) => context.czseChatTime.onDeliver(fn),
     deliver(items) {
       messageListener({
@@ -277,6 +282,61 @@ test("채팅과 무관한 요청은 응답을 건드리지 않는다", async () 
   assert.equal(harness.messages.length, 0);
 });
 
+test("내가 보낸 채팅은 ACK 의 ctime 을 본문과 짝지어 미리 내보낸다", () => {
+  // broadcast(93101)는 0.3초쯤 뒤에야 온다(실측). ACK 엔 시각만, 전송 프레임엔 본문만
+  // 있어서 둘을 합쳐야 화면에 줄이 뜨는 시점에 스탬프를 찍을 수 있다.
+  const harness = createMainHarness();
+  const socket = harness.openSocket();
+
+  socket.send(JSON.stringify({ cmd: 3101, tid: 3, cid: "N2cowr", bdy: { msg: "ㅇㅇ" } }));
+  assert.equal(harness.messages.length, 0); // 전송만으론 아직 시각을 모른다
+
+  socket.emit(JSON.stringify({ cmd: 13101, tid: 3, bdy: { ctime: 1788025480406 } }));
+
+  assert.deepEqual(
+    harness.items().map(({ t, mode, msg, mine, src }) => [t, mode, msg, mine, src]),
+    [[1788025480406, "clock", "ㅇㅇ", true, "N2cowr"]]
+  );
+});
+
+test("전송 프레임은 손대지 않고 그대로 서버로 넘긴다", () => {
+  const harness = createMainHarness();
+  const socket = harness.openSocket();
+  const frame = JSON.stringify({ cmd: 3101, tid: 1, cid: "N1", bdy: { msg: "야" } });
+
+  socket.send(frame);
+
+  assert.deepEqual(socket.sent, [frame]);
+});
+
+test("ACK 에 tid 가 없으면 보낸 순서대로 짝짓는다", () => {
+  const harness = createMainHarness();
+  const socket = harness.openSocket();
+
+  socket.send(JSON.stringify({ cmd: 3101, cid: "N1", bdy: { msg: "첫" } }));
+  socket.send(JSON.stringify({ cmd: 3101, cid: "N1", bdy: { msg: "둘" } }));
+  socket.emit(JSON.stringify({ cmd: 13101, bdy: { ctime: 1788025480000 } }));
+  socket.emit(JSON.stringify({ cmd: 13101, bdy: { ctime: 1788025480500 } }));
+
+  assert.deepEqual(
+    harness.items().map(({ msg, t }) => [msg, t]),
+    [
+      ["첫", 1788025480000],
+      ["둘", 1788025480500],
+    ]
+  );
+});
+
+test("짝지을 전송이 없는 ACK 는 아무것도 내보내지 않는다", () => {
+  const harness = createMainHarness();
+
+  harness
+    .openSocket()
+    .emit(JSON.stringify({ cmd: 13101, tid: 9, bdy: { ctime: 1788025480406 } }));
+
+  assert.equal(harness.messages.length, 0);
+});
+
 // ── isolated world ───────────────────────────────────────────
 
 test("key 는 이모티콘 플레이스홀더와 공백을 무시한다 — DOM 텍스트와 맞추기 위해", () => {
@@ -387,4 +447,29 @@ test("라이브 페이지는 clock 항목만 짝짓는다 — 되감기 offset �
 
   assert.equal(loader.lookup(k, 0, "clock").t, 1787841464251);
   assert.equal(loader.lookup(k, 0, "offset").t, 1580000);
+});
+
+test("mine 은 본문만으로 짝지어지고 일반 조회에는 안 걸린다", () => {
+  // ACK 엔 닉네임이 없어 일반 키를 만들 수 없다. 순번 계산을 오염시키면 안 된다.
+  const loader = createLoaderHarness();
+  const now = Date.now();
+  loader.deliver([{ t: now, mode: "clock", mine: true, msg: "ㅇㅇ", src: "N1" }]);
+
+  assert.equal(loader.lookupMine("ㅇㅇ").t, now);
+  assert.equal(loader.lookup(loader.key(null, "ㅇㅇ"), 0, "clock"), null);
+});
+
+test("mine 도 이모티콘 플레이스홀더·공백을 무시하고 짝짓는다", () => {
+  const loader = createLoaderHarness();
+  loader.deliver([{ t: Date.now(), mode: "clock", mine: true, msg: "{:d_52:}야 옹", src: "N1" }]);
+
+  assert.equal(loader.lookupMine("야옹").mode, "clock");
+});
+
+test("오래된 mine 은 짝짓지 않는다 — 엉뚱한 줄에 붙는 걸 막는다", () => {
+  // broadcast 가 도착하기 전 잠깐만 쓰는 값이다. 그 뒤엔 일반 항목이 같은 값을 준다.
+  const loader = createLoaderHarness();
+  loader.deliver([{ t: Date.now() - 60000, mode: "clock", mine: true, msg: "ㅇㅇ", src: "N1" }]);
+
+  assert.equal(loader.lookupMine("ㅇㅇ"), null);
 });

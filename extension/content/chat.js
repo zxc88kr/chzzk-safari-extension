@@ -63,16 +63,21 @@
       // 닉네임 없는 아이템(시스템 공지 등)은 유저 채팅이 아니다 — 스탬프도 순번 계산도 제외
       const nickname = item.querySelector(NICKNAME_SELECTOR);
       if (!nickname) continue;
+      const text = messageTextOf(item, nickname);
       const key = chatTime.key(
         nickname.textContent.replace(item.querySelector(`.${CLASS}`)?.textContent ?? "", "").trim(),
-        messageTextOf(item, nickname)
+        text
       );
       const occ = counts.get(key) ?? 0;
       counts.set(key, occ + 1);
       if (item.querySelector(`.${CLASS}`)) continue; // 이미 찍힘 — 순번만 소진
       // 작성 시각을 모르는 줄(필터된 채팅의 자리 등)은 찍지 않는다. 렌더 시각으로
       // 대신하면 백로그가 전부 같은 값이 되고 다시보기는 현실 시각이 찍힌다.
-      const found = chatTime.lookup(key, occ, vod ? "offset" : "clock", cutoff);
+      // 내가 방금 친 채팅만 예외 — broadcast 전이라 lookup 은 빈손이지만 전송 ACK 로
+      // 서버 시각을 이미 알고 있다. 나중에 오는 broadcast 도 같은 값이다.
+      const found =
+        chatTime.lookup(key, occ, vod ? "offset" : "clock", cutoff) ??
+        (vod ? null : chatTime.lookupMine(text));
       if (found) addSpan(nickname, found);
     }
   };
